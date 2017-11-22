@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+		<testsuite name="Environment">
+			<file>Ligero/LigeroEnvironmentTest.php</file>
+		</testsuite>
+        <testsuite name="Unit">
+            <file>Ligero/LigeroUnitTest.php</file>
+        </testsuite>
+        <testsuite name="Integration">
+            <file>Ligero/LigeroIntegrationTest.php</file>
+        </testsuite>
+        <testsuite name="Functional">
+            <file>Ligero/LigeroFunctionalTest.php</file>
+        </testsuite>
+	</testsuites>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="DB_CONNECTION" value="sqlite_testing"/>
+    </php>
+</phpunit>

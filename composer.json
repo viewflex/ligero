@@ -1,0 +1,22 @@
+{
+  "name": "viewflex/ligero",
+  "description": "A lightweight yet versatile CRUD micro-framework for Laravel, with dynamic pagination and search controls, query caching, presenters, localization, support for APIs and DDD-style bounded contexts.",
+  "keywords": ["api", "context", "crud", "ddd", "laravel"],
+  "authors": [
+    {
+      "name": "Adam Sailor",
+      "email": "viewflex.contact@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "laravel/framework": "~5.2",
+    "viewflex/forex": "^0.1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Viewflex\\Ligero\\": "src/",
+      "Viewflex\\Ligero\\Publish\\": "src/Publish/"
+    }
+  }
+}
