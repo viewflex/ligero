@@ -117,16 +117,6 @@ class Publisher implements PublisherInterface
             }
         }
 
-        $this->initialize();
-    }
-
-    /**
-     * Override this initialize() method in extended classes,
-     * to generate various additional contextual elements.
-     */
-    public function initialize()
-    {
-        //
     }
 
     /*
