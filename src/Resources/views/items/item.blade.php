@@ -15,19 +15,19 @@
 
                     <div class="panel-heading">
                         @if ($read_only)
-                            <a href="{{ $back_to }}"><button tabindex="1" class="btn btn-primary btn-sm active" role="button">{!! trans($trans_prefix.'ui.back') !!}</button></a>
+                            <a href="{{ $back_to }}"><button tabindex="1" class="btn btn-primary btn-sm active" role="button">{!! trans($trans_prefix.'ui.label.back') !!}</button></a>
                         @else
-                            <a href="{{ $back_to }}"><button tabindex="8" class="btn btn-default btn-sm" role="button">{!! trans($trans_prefix.'ui.cancel') !!}</button></a>
+                            <a href="{{ $back_to }}"><button tabindex="8" class="btn btn-default btn-sm" role="button">{!! trans($trans_prefix.'ui.label.cancel') !!}</button></a>
                         @endif
 
                         &nbsp;&nbsp;
-                        {!! $info !!} @if ($message)&nbsp;&nbsp;{!! trans($trans_prefix.'ui.message') !!}:&nbsp;{!! $message !!}@endif
+                        {!! $info !!} @if ($message)&nbsp;&nbsp;{!! trans($trans_prefix.'ui.label.message') !!}:&nbsp;{!! $message !!}@endif
                     </div>
 
                     @if ($errors->any())
                     <div class="panel-heading">
 
-                        <h3>{!! trans($trans_prefix.'ui.errors') !!}:</h3>
+                        <h3>{!! trans($trans_prefix.'ui.label.errors') !!}:</h3>
                         <ul  class="alert alert-danger">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -106,7 +106,7 @@
                             @if (!$read_only)
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-6">
-                                        <button type="submit" name="action" value="save" tabindex="7" class="btn btn-primary">{!! trans($trans_prefix.'ui.save') !!}</button>
+                                        <button type="submit" name="action" value="save" tabindex="7" class="btn btn-primary">{!! trans($trans_prefix.'ui.label.save') !!}</button>
                                     </div>
 
 

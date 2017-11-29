@@ -552,12 +552,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     /**
      * The various named sorts for use in listing query.
      * There should always be at least the 'default'.
-     * Names correspond to columns - display text
-     * is drawn from current localization file,
-     * 'sort_reverse' string replaces '-r'.
-     *
-     * When adding new sorts, make sure to
-     * add name to the localization file.
      *
      * @var array
      */

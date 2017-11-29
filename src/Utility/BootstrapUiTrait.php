@@ -54,12 +54,12 @@ trait BootstrapUiTrait
             ($pager['pages']['prev'] !== null ? '' : ' disabled').
             "\"><a href=\"".($pager['pages']['prev'] ? : '#').
             "\"><span aria-hidden=\"true\">&larr;</span> ".
-            $this->config->ls('ui.link_results_previous')."</a></li>";
+            $this->config->ls('ui.nav.previous')."</a></li>";
 
         $html .= "\n        <li class=\"next".
             ($pager['pages']['next'] !== null ? '' : ' disabled').
             "\"><a href=\"".($pager['pages']['next'] ? : '#').
-            "\">".$this->config->ls('ui.link_results_next').
+            "\">".$this->config->ls('ui.nav.next').
             " <span aria-hidden=\"true\">&rarr;</span></a></li>";
 
         $html .= "\n    </ul>\n</nav>\n\n";
@@ -80,7 +80,7 @@ trait BootstrapUiTrait
 
         if ($pager['pages']['prev']) {
             $html .= "\n        <li><a href=\"".$pager['pages']['prev'].
-                "\" aria-label=\"".$this->config->ls('ui.link_results_previous').
+                "\" aria-label=\"".$this->config->ls('ui.nav.previous').
                 "\"><span aria-hidden=\"true\">&laquo;</span></a><li>";
         } else
             $html .= "\n        <li class=\"disabled\"><span><span aria-hidden=\"true\">&laquo;</span></span></li>";
@@ -95,7 +95,7 @@ trait BootstrapUiTrait
 
         if ($pager['pages']['next']) {
             $html .= "\n        <li><a href=\"".$pager['pages']['next'].
-                "\" aria-label=\"".$this->config->ls('ui.link_results_next').
+                "\" aria-label=\"".$this->config->ls('ui.nav.next').
                 "\"><span aria-hidden=\"true\">&raquo;</span></a><li>";
         } else
             $html .= "\n        <li class=\"disabled\"><span><span aria-hidden=\"true\">&raquo;</span></span></li>";

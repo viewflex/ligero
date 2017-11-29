@@ -10,7 +10,7 @@
 
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="{!! strtolower($domain) !!}">All</a>
+                    <a href="{!! strtolower($domain) !!}">{!! trans($trans_prefix.'ui.label.all') !!}</a>
                 </li>
             </ul>
 

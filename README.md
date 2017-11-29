@@ -39,6 +39,7 @@ Quick-Links:
     - [Namespace for Custom Classes](#namespace-for-custom-classes)
 - [Tests](#tests)
 - [License](#license)
+- [Changelog](#changelog)
 - [Contributing](#contributing)
 
 ## Installation
@@ -1046,7 +1047,10 @@ The phpunit tests can be run in the usual way, as described in the [Test Documen
 
 This software is offered for use under the [MIT License](https://github.com/viewflex/ligero/blob/master/LICENSE.md).
 
+## Changelog
+
+Release versions are tracked in the [Changelog](https://github.com/viewflex/ligero-docs/blob/master/CHANGELOG.md).
+
 ## Contributing
 
 Please see the [Contributing Guide](https://github.com/viewflex/ligero-docs/blob/master/CONTRIBUTING.md) to learn more about the project goals and how you can help.
-
