@@ -55,7 +55,7 @@ class Formatter
         $precision = $decimals === null ? $money['precision'] : $decimals;
 
         return (is_null($value) || $value == 0) ?
-            $this->config->ls('ui.label_null_value') :
+            $this->config->ls('ui.symbol.null') :
             $money['prefix']
             .number_format($value, $precision, $money['decimal'], $money['thousands'])
             .$money['suffix'];
@@ -204,7 +204,7 @@ class Formatter
         $precision = $decimals === null ? $ruler['precision'] : $decimals;
 
         return (is_null($value) || $value == 0) ?
-            $this->config->ls('ui.label_null_value') :
+            $this->config->ls('ui.symbol.null') :
             number_format($value, $precision, '.', ',')
             .$ruler['suffix'];
     }
@@ -260,7 +260,7 @@ class Formatter
         $precision = $decimals === null ? $scale['precision'] : $decimals;
 
         return (is_null($value) || $value == 0) ?
-            $this->config->ls('label_null_value') :
+            $this->config->ls('ui.symbol.null') :
             number_format($value, $precision, '.', ',')
             .$scale['suffix'];
     }

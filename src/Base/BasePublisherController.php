@@ -83,10 +83,10 @@ abstract class BasePublisherController extends Controller
             // If we just updated/deleted record(s), then obviously
             // the previous query is now invalid, back to root URI.
             if ($this->getDataModified())
-                return $this->goToRoot('ui.msg_data_modified');
+                return $this->goToRoot('ui.msg.data_modified');
 
             // Go back to last good index() query, with failure message.
-            return $this->goBack('ui.msg_search_failed');
+            return $this->goBack('ui.msg.search_failed');
         }
             
     }
@@ -131,11 +131,11 @@ abstract class BasePublisherController extends Controller
     public function composeListing()
     {
         return [
-            'info' => $this->config->ls('ui.viewing')
+            'info' => $this->config->ls('ui.results.viewing')
                 .' '.$this->publisher->getPagination()['viewing']['first']
-                .'~' . $this->publisher->getPagination()['viewing']['last']
-                .' '.$this->config->ls('ui.of').' '.$this->publisher->found()
-                .' '.$this->config->ls('ui.records', $this->publisher->found()),
+                .$this->config->ls('ui.symbol.range').$this->publisher->getPagination()['viewing']['last']
+                .' '.$this->config->ls('ui.results.of').' '.$this->publisher->found()
+                .' '.$this->config->ls('ui.results.records', $this->publisher->found()),
             'page_menu' => $this->pageNav(),
             'query_dropdowns' => '',
             'keyword_search' => $this->keywordSearch(),
@@ -184,7 +184,7 @@ abstract class BasePublisherController extends Controller
                 $data['query'] = $this->publisher->getQueryInfo();
                 $data['item'] = $this->publisher->getItems()[0];
                 $data['form_action'] = 'show';
-                $action_message = $this->config->ls('ui.action_view_domain_record', ['domain' => $this->config->getDomain()])
+                $action_message = $this->config->ls('ui.title.view_domain_record', ['domain' => $this->config->getDomain()])
                     .' #'.$this->request->getQueryInput('id');
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
@@ -198,7 +198,7 @@ abstract class BasePublisherController extends Controller
                 $form_action = $this->currentRouteUrlDir().'/store';
 
                 $data['form_action'] = $form_action;
-                $action_message = $this->config->ls('ui.action_new_domain_record', ['domain' => $this->config->getDomain()]);
+                $action_message = $this->config->ls('ui.title.new_domain_record', ['domain' => $this->config->getDomain()]);
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
                 break;
@@ -211,7 +211,7 @@ abstract class BasePublisherController extends Controller
                 $form_action = $this->currentRouteUrlDir();
 
                 $data['form_action'] = $form_action;
-                $action_message = $this->config->ls('ui.action_update_domain_record', ['domain' => $this->config->getDomain()])
+                $action_message = $this->config->ls('ui.title.update_domain_record', ['domain' => $this->config->getDomain()])
                     .' #'.$this->request->getQueryInput('id');
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
@@ -270,9 +270,9 @@ abstract class BasePublisherController extends Controller
 
 
         if ($this->publisher->store())
-            return $this->goBack('ui.msg_item_created');
+            return $this->goBack('ui.msg.item_created');
         else
-            return $this->goBack('ui.msg_item_not_created');
+            return $this->goBack('ui.msg.item_not_created');
 
     }
 
@@ -306,7 +306,7 @@ abstract class BasePublisherController extends Controller
         if ($this->publisher->displayed())
             return $this->returnView('item', $this->composeItem());
         else
-            return $this->goBack('ui.msg_search_failed');
+            return $this->goBack('ui.msg.search_failed');
     }
 
     /**
@@ -327,9 +327,9 @@ abstract class BasePublisherController extends Controller
 
         if ($this->publisher->update()) {
             $this->setDataModified();
-            return $this->goBack('ui.msg_item_updated');
+            return $this->goBack('ui.msg.item_updated');
         } else
-            return $this->goBack('ui.msg_item_not_updated');
+            return $this->goBack('ui.msg.item_not_updated');
 
     }
 
@@ -351,9 +351,9 @@ abstract class BasePublisherController extends Controller
 
         if ($this->publisher->delete()) {
             $this->setDataModified();
-            return $this->goBack('ui.msg_item_deleted');
+            return $this->goBack('ui.msg.item_deleted');
         } else
-            return $this->goBack('ui.msg_item_not_deleted');
+            return $this->goBack('ui.msg.item_not_deleted');
     }
 
     /*
@@ -378,9 +378,9 @@ abstract class BasePublisherController extends Controller
 
         if ($affected = $this->publisher->action()) {
             $this->setDataModified();
-            return $this->goBack('ui.records_affected_by', ['action' => ("\"".$this->request->getAction()."\""), 'affected' => $affected]);
+            return $this->goBack('ui.msg.records_affected_by', ['action' => ("\"".$this->request->getAction()."\""), 'affected' => $affected]);
         } else
-            return $this->goBack('ui.msg_no_data_affected');
+            return $this->goBack('ui.msg.no_data_affected');
     }
     
 }

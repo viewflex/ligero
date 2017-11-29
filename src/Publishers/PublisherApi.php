@@ -217,7 +217,7 @@ class PublisherApi implements PublisherApiInterface
 
             $str_first = strval($start + 1);
             $str_last = $displayed > 1 ? strval($start+$displayed) : strval($start + $displayed);
-            $str_range = $displayed > 1 ? $str_first.$this->config->ls('ui.through').$str_last : $str_first;
+            $str_range = $displayed > 1 ? $str_first.$this->config->ls('ui.symbol.range').$str_last : $str_first;
             $route = $this->getRoute();
 
             $config = $this->config->getPaginationConfig();
@@ -296,7 +296,7 @@ class PublisherApi implements PublisherApiInterface
                 'base_parameters'   =>  $params,
                 'keyword'           =>  $keyword,
                 'clear'             =>  $clear,
-                'label_search'      =>  $this->config->ls('ui.label_search')
+                'label_search'      =>  $this->config->ls('ui.label.search')
             ];
 
         }
@@ -1168,23 +1168,23 @@ class PublisherApi implements PublisherApiInterface
             'context'   =>  $context,
             'views'     =>  [
                 'list'          =>  [
-                    'display'   =>  $this->config->ls('ui.link_results_list'),
+                    'display'   =>  $this->config->ls('ui.nav.list'),
                     'limit'     =>  $this->config->getViewLimit('list'),
                     'url'       =>  $list_view
                 ],
                 'grid'          =>  [
-                    'display'   =>  $this->config->ls('ui.link_results_grid'),
+                    'display'   =>  $this->config->ls('ui.nav.grid'),
                     'limit'     =>  $this->config->getViewLimit('grid'),
                     'url'       =>  $grid_view
                 ],
                 'item'          =>  [
-                    'display'   =>  $this->config->ls('ui.link_results_item'),
+                    'display'   =>  $this->config->ls('ui.nav.item'),
                     'limit'     =>  $this->config->getViewLimit('item'),
                     'url'       =>  $item_view
                 ]
             ],
             'selected'          =>  $view,
-            'label_view_as'     =>  $this->config->ls('ui.label_view_as')
+            'label_view_as'     =>  $this->config->ls('ui.nav.view_as')
         ];
     }
 

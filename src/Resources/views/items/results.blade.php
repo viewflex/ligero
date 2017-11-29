@@ -59,12 +59,12 @@
                                 <td>{!! $item['price'] !!} / {!! $item['alt_price'] !!}</td>
                                 <td>
                                     <div class="btn-group btn-group-xs" role="group" aria-label="Edit">
-                                        <a href="{{ ($path.'/'.strtolower($domain).'/'.$item['id'].'/edit') }}" role="button"  class="btn btn-default btn-xs">{!! trans($trans_prefix.'ui.record_edit') !!}</a>
+                                        <a href="{{ ($path.'/'.strtolower($domain).'/'.$item['id'].'/edit') }}" role="button"  class="btn btn-default btn-xs">{!! trans($trans_prefix.'ui.label.edit') !!}</a>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-xs" role="group" aria-label="Delete">
-                                        <form method="post" action="{{ ($path.'/'.strtolower($domain).'/'.$item['id']) }}" name="fDeleteItem" onsubmit="return confirm('{!! trans($trans_prefix.'ui.confirm_record_delete') !!}');">
+                                        <form method="post" action="{{ ($path.'/'.strtolower($domain).'/'.$item['id']) }}" name="fDeleteItem" onsubmit="return confirm('{!! trans($trans_prefix.'ui.prompt.confirm_record_delete') !!}');">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
                                             <input type="submit" name="submit" value="Delete" role="button" class="btn btn-default btn-xs">
