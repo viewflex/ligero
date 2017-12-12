@@ -34,28 +34,6 @@ interface PublisherInterface
      * @return Query
      */
     public function getQuery();
-
-    /*
-    |--------------------------------------------------------------------------
-    | Utility Functions
-    |--------------------------------------------------------------------------
-    */
-    
-    /**
-     * Returns the current URL, with parameters properly ordered.
-     * Non-query action and items (array) params are skipped.
-     *
-     * @return string
-     */
-    public function urlSelf();
-
-    /**
-     * Validates inputs against the rules of this publisher instance.
-     *
-     * @param array $inputs
-     * @return bool
-     */
-    public function inputsAreValid($inputs = []);
     
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +42,7 @@ interface PublisherInterface
     */
     
     /**
-     * Returns info on API query and results.
+     * Returns info on query and results.
      *
      * @return mixed
      */
@@ -116,7 +94,7 @@ interface PublisherInterface
     public function getKeywordSearch();
 
     /**
-     * Returns all API data bundles together, along with query info.
+     * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
@@ -136,7 +114,7 @@ interface PublisherInterface
     public function presentItems();
 
     /**
-     * Returns all publisher data bundles together, along with query info.
+     * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
@@ -159,8 +137,7 @@ interface PublisherInterface
     public function find($id, $native = true);
 
     /**
-     * Querying on the inputs provided, which may not have been validated,
-     * returns the results of publisher query in native or array format.
+     * Returns the results of publisher query in native or array format, or null.
      *
      * @param array $inputs
      * @param bool $native
@@ -169,7 +146,7 @@ interface PublisherInterface
     public function findBy($inputs = [], $native = true);
 
     /**
-     * Store an item, using explicit or default request inputs.
+     * Store an item, using explicit or pre-configured request inputs, returning new id.
      *
      * @param null|array $inputs
      * @return int
@@ -177,7 +154,7 @@ interface PublisherInterface
     public function store($inputs = null);
 
     /**
-     * Update an item, using explicit or default request inputs.
+     * Update an item, using explicit or pre-configured request inputs, returning number of rows affected.
      *
      * @param null|array $inputs
      * @return int
@@ -185,7 +162,7 @@ interface PublisherInterface
     public function update($inputs = null);
 
     /**
-     * Delete an item, using explicit or default request input.
+     * Delete an item, using explicit or pre-configured request input, returning number of rows affected.
      *
      * @param null|int $id
      * @return int
@@ -210,5 +187,27 @@ interface PublisherInterface
      * @return int
      */
     public function action($inputs = null);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Utility Functions
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Returns the current URL, with parameters properly ordered.
+     * Non-query action and items (array) params are skipped.
+     *
+     * @return string
+     */
+    public function urlSelf();
+
+    /**
+     * Validates inputs against the rules of this publisher instance.
+     *
+     * @param array $inputs
+     * @return bool
+     */
+    public function inputsAreValid($inputs = []);
     
 }

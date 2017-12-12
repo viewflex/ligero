@@ -2,8 +2,7 @@
 
 namespace Viewflex\Ligero\Exceptions;
 
-class PresenterException extends \Exception {
-
+class PresenterException extends \Exception
+{
     //
-
 }

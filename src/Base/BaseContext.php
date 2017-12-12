@@ -9,7 +9,7 @@ use Viewflex\Ligero\Publishers\HasPublisher;
 use Viewflex\Ligero\Utility\ArrayHelperTrait;
 
 /**
- * This is the base class of the package context layer.
+ * This is the base class of the Ligero context layer.
  * Extend this class and customize via setter methods.
  */
 abstract class BaseContext implements ContextInterface
@@ -17,8 +17,8 @@ abstract class BaseContext implements ContextInterface
     use HasPublisher, ArrayHelperTrait;
 
     /**
-     * Create base context with default publisher components, set package defaults.
-     * Continue customizing config, request, and query as needed in child classes.
+     * Create base context with default publisher components, set custom defaults,
+     * continue customizing config, request, and query as needed in child classes.
      */
     public function __construct()
     {
@@ -66,13 +66,11 @@ abstract class BaseContext implements ContextInterface
 
     /*
     |--------------------------------------------------------------------------
-    | Publisher Query Actions with Pre-Validation Using Domain Rules
+    | Basic CRUD Actions with Pre-Validation Using Domain Rules
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Returns the results of publisher query on id in native or array format.
-     *
      * @param int $id
      * @param bool $native
      * @return mixed
@@ -111,9 +109,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Querying on the inputs provided, which may not have been validated,
-     * returns the results of publisher query in native or array format.
-     *
      * @param array $inputs
      * @param bool $native
      * @return mixed
@@ -152,8 +147,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Store an item, using explicit or pre-configured request inputs.
-     *
      * @param array $inputs
      * @return mixed
      */
@@ -191,8 +184,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Update an item, using explicit request inputs.
-     *
      * @param array $inputs
      * @return mixed
      */
@@ -230,8 +221,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Delete an item, using explicit request input.
-     *
      * @param int $id
      * @return mixed
      */
@@ -267,13 +256,11 @@ abstract class BaseContext implements ContextInterface
 
     /*
     |--------------------------------------------------------------------------
-    | Rich Context Query Actions - Use Basic CRUD Requests as Defaults
+    | Rich Context Query Actions - Use Basic CRUD Actions as Defaults
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Returns the results of context query on id in native or array format.
-     *
      * @param int $id
      * @param bool $native
      * @return mixed
@@ -285,9 +272,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Find by attributes using explicit query inputs,
-     * returns the results in native or array format.
-     *
      * @param array $inputs
      * @param bool $native
      * @return mixed
@@ -299,8 +283,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Store a context using explicit inputs.
-     *
      * @param array $inputs
      * @return mixed
      */
@@ -310,8 +292,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Update a context using explicit inputs.
-     *
      * @param array $inputs
      * @return mixed
      */
@@ -321,8 +301,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Delete a context using explicit input.
-     *
      * @param int $id
      * @return mixed
      */
@@ -338,8 +316,6 @@ abstract class BaseContext implements ContextInterface
     */
 
     /**
-     * Validates inputs against the rules of this publisher instance.
-     *
      * @param array $inputs
      * @return bool
      */
@@ -355,8 +331,6 @@ abstract class BaseContext implements ContextInterface
     */
 
     /**
-     * The format for returning failure information for errors in transactions.
-     *
      * @param string $msg
      * @param array $data
      * @return array
@@ -367,8 +341,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * The format for returning operational failure information as a string.
-     *
      * @param string $operation
      * @param array $inputs
      * @return string
@@ -379,9 +351,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Returns array with domain name and context array as key => value pair.
-     * The standard format for returning a context as an array element.
-     *
      * @param array $context
      * @param null|string $name
      * @return array
@@ -392,8 +361,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Return response array according to context spec.
-     *
      * @param int $success
      * @param mixed $msg
      * @param mixed $data
@@ -409,8 +376,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Return the 'success' element from context response or null.
-     *
      * @param array $response
      * @return mixed|null
      */
@@ -423,8 +388,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Return the 'msg' element from context response or null.
-     *
      * @param array $response
      * @return mixed|null
      */
@@ -437,8 +400,6 @@ abstract class BaseContext implements ContextInterface
     }
 
     /**
-     * Return the 'data' element from context response or null.
-     *
      * @param array $response
      * @return mixed|null
      */
@@ -457,9 +418,6 @@ abstract class BaseContext implements ContextInterface
     */
 
     /**
-     * Log context event if logging is enabled in config.
-     * Return input fluently for reuse in either case.
-     *
      * @param string $message
      * @return string
      */

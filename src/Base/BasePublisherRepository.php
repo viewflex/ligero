@@ -5,7 +5,6 @@ namespace Viewflex\Ligero\Base;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -50,8 +49,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     */
 
     /**
-     * Set publisher api, extract config and request, load model from config.
-     *
      * @param Api $api
      */
     public function setApi(Api $api)
@@ -70,9 +67,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     */
 
     /**
-     * Returns total number of records that would be found
-     * if we were using publisher query without a limit.
-     *
      * @return int
      * @throws PublisherRepositoryException
      */
@@ -93,9 +87,8 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns the number of records actually returned by publisher query.
-     *
      * @return int
+     * @throws PublisherRepositoryException
      */
     public function displayed()
     {
@@ -104,10 +97,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
     
     /**
-     * Returns the results of listing query, which could be a
-     * collection of model instances, a single one, or null.
-     * If configured, caches results and distinct columns.
-     *
      * @return mixed
      * @throws PublisherRepositoryException
      */
@@ -132,9 +121,8 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns the results of listing query as array or null.
-     *
-     * @return array|null
+     * @return mixed
+     * @throws PublisherRepositoryException
      */
     public function getItems()
     {
@@ -244,26 +232,26 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns a unique query identifier for use as a cache key.
+     * Return a unique query identifier for use as a cache key.
      *
      * @param \Illuminate\Database\Query\Builder $builder
      * @return string
      */
-    public function cacheKey($builder)
+    protected function cacheKey($builder)
     {
         return md5($this->api->getRoute().$builder->toSql().serialize($builder->getBindings()));
     }
 
     /**
-     * Using cache if specified, perform builder query,
-     * with function and builder passed as arguments.
+     * Return result from given query and builder,
+     * taking advantage of caching, if available.
      *
      * @param Closure $function
      * @param Builder $builder
      * @return mixed
      * @throws PublisherRepositoryException
      */
-    public function cacheQuery($function, $builder)
+    protected function cacheQuery($function, $builder)
     {
         $cache = $this->config->getCaching();
 
@@ -299,8 +287,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     */
 
     /**
-     * Stores a new item.
-     *
      * @return int
      * @throws PublisherRepositoryException
      */
@@ -337,8 +323,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Updates an existing item.
-     *
      * @return int
      * @throws PublisherRepositoryException
      */
@@ -373,8 +357,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Deletes the item, 'soft-deleting' if configured.
-     *
      * @return int
      * @throws PublisherRepositoryException
      */
@@ -417,11 +399,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     */
     
     /**
-     * Calls the appropriate db query, returning number of rows affected.
-     * This is a method you will want to override in extended classes
-     * to provide additional list actions using request parameters
-     * set and validated in request or explicitly in publisher.
-     *
      * @return int
      * @throws PublisherRepositoryException
      */
@@ -513,8 +490,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns input or mapped column name if configured.
-     *
      * @param string $key
      * @return string
      */
@@ -524,8 +499,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns array of attributes with keys mapped.
-     *
      * @param array $attributes
      * @return array
      */
@@ -540,8 +513,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Returns input or reverse mapped column alias if configured.
-     *
      * @param string $value
      * @return string
      */
@@ -552,8 +523,6 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     }
 
     /**
-     * Same as select() but with column names mapped.
-     *
      * @param array $columns
      * @return mixed
      */

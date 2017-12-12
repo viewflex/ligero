@@ -4,16 +4,19 @@ namespace Viewflex\Ligero\Contracts;
 
 /**
  * A context encapsulates a custom domain publisher for general use,
- * without the session and IOC properties of a publisher controller,
- * but providing access to this domain's data via explicit calls.
+ * without the session and IoC properties of a publisher controller,
+ * but providing access to the domain's data via explicit calls.
+ * 
  * Here we use the publisher CRUD methods, and also gather data
  * from other domains if this domain is an aggregate root.
+ * 
+ * A consistent response format is returned via contextResponse().
  */
 interface ContextInterface
 {
     /*
     |--------------------------------------------------------------------------
-    | Publisher Query Actions with Pre-Validation Using Domain Rules
+    | Basic CRUD Context Actions with Pre-Validation Using Domain Rules
     |--------------------------------------------------------------------------
     */
 
@@ -27,8 +30,7 @@ interface ContextInterface
     public function find($id, $native = true);
 
     /**
-     * Querying on the inputs provided, which may not have been validated,
-     * returns the results of publisher query in native or array format.
+     * Returns the results of publisher query in native or array format.
      *
      * @param array $inputs
      * @param bool $native
@@ -37,7 +39,7 @@ interface ContextInterface
     public function findBy($inputs = [], $native = true);
 
     /**
-     * Store an item, using explicit or pre-configured request inputs.
+     * Store an item, using explicit request inputs.
      *
      * @param array $inputs
      * @return mixed
@@ -45,7 +47,7 @@ interface ContextInterface
     public function store($inputs);
 
     /**
-     * Update an item, using explicit or pre-configured request inputs.
+     * Update an item, using explicit request inputs.
      *
      * @param array $inputs
      * @return mixed
@@ -53,7 +55,7 @@ interface ContextInterface
     public function update($inputs);
 
     /**
-     * Delete an item, using explicit or pre-configured request input.
+     * Delete an item, using explicit request input.
      *
      * @param int $id
      * @return mixed
@@ -62,7 +64,7 @@ interface ContextInterface
 
     /*
     |--------------------------------------------------------------------------
-    | Rich Context Query Actions via Explicit Inputs
+    | Rich Context Query Actions - Use Basic CRUD Actions as Defaults
     |--------------------------------------------------------------------------
     */
 

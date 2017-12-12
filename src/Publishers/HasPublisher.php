@@ -21,7 +21,7 @@ trait HasPublisher
 {
     /*
     |--------------------------------------------------------------------------
-    | The Publisher and it's Components for This Controller
+    | The Publisher and it's Components
     |--------------------------------------------------------------------------
     */
 

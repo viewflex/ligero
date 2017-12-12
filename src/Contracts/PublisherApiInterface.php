@@ -15,21 +15,21 @@ interface PublisherApiInterface
     */
     
     /**
-     * Returns the config used by API.
+     * Returns the config component.
      *
      * @return Config
      */
     public function getConfig();
 
     /**
-     * Returns the request used by API.
+     * Returns the request component.
      *
      * @return Request
      */
     public function getRequest();
 
     /**
-     * Returns the query used by API.
+     * Returns the query component.
      *
      * @return Query
      */
@@ -42,7 +42,7 @@ interface PublisherApiInterface
     */
     
     /**
-     * Sets the query used by API.
+     * Sets the query component.
      *
      * @param Query $query
      */
@@ -55,7 +55,7 @@ interface PublisherApiInterface
     */
     
     /**
-     * Returns info on API query and results.
+     * Returns info on query and results.
      *
      * @return mixed
      */
@@ -92,8 +92,6 @@ interface PublisherApiInterface
 
     /**
      * Returns data for pagination UI controls and labels.
-     * All URL parameters persist, only start changes,
-     * unless of course we're switching view mode.
      *
      * Because user might conceivably input a start value that does not
      * correspond to a logical page start, we must offer two flavors
@@ -124,7 +122,7 @@ interface PublisherApiInterface
     public function getKeywordSearch();
     
     /**
-     * Returns all API data bundles together, along with query info.
+     * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
@@ -144,7 +142,7 @@ interface PublisherApiInterface
     public function presentItems();
 
     /**
-     * Returns all publisher data bundles together, along with query info.
+     * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
@@ -201,17 +199,26 @@ interface PublisherApiInterface
     public function getQueryLimit();
 
     /**
-     * Returns start as used in listing query.
+     * Returns start as used in listing query. If page
+     * is specified explicitly, use to calculate start,
+     * but only if there's no start specified as well.
      *
      * @return int
      */
     public function getQueryStart();
 
     /**
+     * Returns page as used to calculate start, or null if not present in inputs.
+     *
+     * @return int|null
+     */
+    public function getQueryPage();
+
+    /**
      * Returns, in a fixed order, the base query parameters for generating URL query
      * strings in breadcrumbs, query and sort menus, so we use no default parameters,
      * only the inputs (if not the same as defaults), including sort, view and limit.
-     * Start is skipped, since we use these parameters to generate fresh queries.
+     * We skip start/page, since we are generating fresh queries with these links.
      *
      * @return array
      */
@@ -258,7 +265,26 @@ interface PublisherApiInterface
     public function urlQueryString($parameters = []);
 
     /**
+     * Returns a URL query string from input array plus starting row.
+     *
+     * @param array $params
+     * @param int $start
+     * @return string
+     */
+    public function urlQueryWithStart($params, $start);
+
+    /**
+     * Returns a URL query string from input array plus page.
+     *
+     * @param array $params
+     * @param int $page
+     * @return string
+     */
+    public function urlQueryWithPage($params, $page);
+    
+    /**
      * Returns the current URL, with parameters properly ordered.
+     * One-time parameters items, action, options, are omitted.
      *
      * @return string
      */

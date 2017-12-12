@@ -20,7 +20,7 @@ interface PublisherRepositoryInterface
     public function loadModel();
     
     /**
-     * Give the query object an api to use.
+     * Set publisher api, extract config and request, load model from config.
      *
      * @param Api $api
      */
@@ -37,6 +37,7 @@ interface PublisherRepositoryInterface
      * if we were using publisher query without a limit.
      *
      * @return int
+     * @throws PublisherRepositoryException
      */
     public function found();
 
@@ -44,20 +45,23 @@ interface PublisherRepositoryInterface
      * Returns the number of records actually returned by publisher query.
      *
      * @return int
+     * @throws PublisherRepositoryException
      */
     public function displayed();
     
     /**
-     * Returns the results of listingQuery() in native format.
+     * Returns the results of publisher query as a collection, or null.
      *
      * @return mixed
+     * @throws PublisherRepositoryException
      */
     public function getResults();
 
     /**
-     * Returns the results of listingQuery() as array or null.
+     * Returns the results of publisher query as an array, or null.
      *
      * @return mixed
+     * @throws PublisherRepositoryException
      */
     public function getItems();
     
@@ -84,7 +88,7 @@ interface PublisherRepositoryInterface
     public function update();
 
     /**
-     * Deletes an existing item.
+     * Deletes an existing item, 'soft-deleting' if table is so configured.
      *
      * @return int
      * @throws PublisherRepositoryException
@@ -115,11 +119,15 @@ interface PublisherRepositoryInterface
     */
 
     /**
+     * Gets column mapping array.
+     * 
      * @return array
      */
     public function getColumnMap();
 
     /**
+     * Sets column mapping array.
+     * 
      * @param array $column_map
      */
     public function setColumnMap($column_map);

@@ -10,7 +10,7 @@ use Viewflex\Ligero\Exceptions\PresenterException;
  * creates or uses an existing singleton Presenter object to
  * invoke any method or property of the model. The entity
  * gets set to current item on each usage of present().
- * The path of Presenter class is a model property.
+ * The Presenter class name set below is the default.
  */
 trait PresentableTrait
 {
@@ -38,6 +38,8 @@ trait PresentableTrait
     }
 
     /**
+     * The presenter singleton for repeated usage.
+     * 
      * @var PresenterInterface
      */
     protected static $presenter_instance;

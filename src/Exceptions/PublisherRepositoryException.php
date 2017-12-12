@@ -2,8 +2,7 @@
 
 namespace Viewflex\Ligero\Exceptions;
 
-class PublisherRepositoryException extends \Exception {
-
+class PublisherRepositoryException extends \Exception
+{
     //
-
 }

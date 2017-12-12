@@ -2,8 +2,7 @@
 
 namespace Viewflex\Ligero\Exceptions;
 
-class FormatterException extends \Exception {
-
+class FormatterException extends \Exception
+{
     //
-
 }

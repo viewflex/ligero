@@ -60,5 +60,4 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
         return $this->contextResponse(1, null, $contexts);
     }
     
-    
 }
