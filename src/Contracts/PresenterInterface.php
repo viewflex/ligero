@@ -14,42 +14,52 @@ interface PresenterInterface
     public function getEntity();
 
     /**
-     * Set the model instance to use.
+     * Fluently set the model instance to use.
      *
      * @param $entity
+     * @return PresenterInterface
      */
     public function setEntity($entity);
 
     /**
-     * @return PublisherConfigInterface
+     * Get the optional config object being used.
+     * 
+     * @return null|PublisherConfigInterface
      */
     public function getConfig();
 
     /**
+     * Fluently set the optional config object to use.
+     * 
      * @param PublisherConfigInterface $config
+     * @return PresenterInterface
      */
     public function setConfig($config);
 
     /**
+     * Get the formatter class being used.
+     * 
      * @return mixed
      */
     public function getFormatter();
 
     /**
+     * Fluently set the formatter class to use.
+     * 
      * @param $formatter
+     * @return PresenterInterface
      */
     public function setFormatter($formatter);
 
     /**
-     * Make sure the presenter's config reference
-     * has been set, for methods that require it.
+     * Make sure config object is set, for methods that require it.
      *
      * @throws PresenterException
      */
     public function requireConfig();
 
     /**
-     * Make sure the attribute exists before trying to use it.
+     * Make sure an attribute exists before trying to use it.
      *
      * @param $column
      * @throws PresenterException

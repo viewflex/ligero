@@ -47,8 +47,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $translation_file = '';
 
     /**
-     * Get domain name.
-     * 
      * @return string
      */
     public function getDomain()
@@ -57,8 +55,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set domain name.
-     * 
      * @param string $domain
      */
     public function setDomain($domain)
@@ -67,8 +63,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get resource namespace.
-     * 
      * @return string
      */
     public function getResourceNamespace()
@@ -77,8 +71,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set resource namespace.
-     * 
      * @param string $resource_namespace
      */
     public function setResourceNamespace($resource_namespace)
@@ -87,8 +79,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get translation (lang) file name.
-     * 
      * @return string
      */
     public function getTranslationFile()
@@ -97,8 +87,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set translation (lang) file name.
-     * 
      * @param string $translation_file
      */
     public function setTranslationFile($translation_file)
@@ -107,9 +95,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Concatenate the translation namespace and file,
-     * for use in views where ls() is not possible.
-     * 
      * @return string
      */
     public function getTranslationPrefix()
@@ -120,10 +105,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get a localized string, using namespace prefix if configured.
-     * Alias for Laravel trans() or trans_choice() helper function,
-     * depending on whether a count is supplied for inflection.
-     *
      * @param string $key
      * @param null|array|int $option
      * @return string
@@ -145,8 +126,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
     
     /**
-     * Concatenate resource namespace and domain for view prefix.
-     *
      * @return string
      */
     public function getDomainViewPrefix()
@@ -156,8 +135,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get the view name with namespace and domain prefix.
-     *
      * @param string $view
      * @return string
      */
@@ -188,9 +165,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $model_name = 'Viewflex\Ligero\Base\BaseModel';
 
     /**
-     * Get table name for this domain, from multi-domain tables array if existing,
-     * keyed by $this->table_name, using the property itself as a fallback value.
-     * 
      * @return string
      */
     public function getTableName()
@@ -200,8 +174,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set table name for this domain.
-     * 
      * @param string $table_name
      */
     public function setTableName($table_name)
@@ -210,9 +182,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get model name for this domain, from multi-domain models array if existing,
-     * keyed by $this->table_name, using $this->model_name as a fallback value.
-     * 
      * @return string
      */
     public function getModelName()
@@ -221,8 +190,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set model name for this domain.
-     * 
      * @param string $model_name
      */
     public function setModelName($model_name)
@@ -290,8 +257,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $wildcard_columns = [];
 
     /**
-     * Get valid query parameters and their defaults.
-     * 
      * @return array
      */
     public function getQueryDefaults()
@@ -300,8 +265,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set valid query parameters and their defaults.
-     * 
      * @param array $query_defaults
      */
     public function setQueryDefaults($query_defaults)
@@ -310,8 +273,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set a single key on the array of valid query parameters and their defaults.
-     * 
      * @param string $name
      * @param string $value
      */
@@ -321,9 +282,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get results columns for given view. If view is not specified,
-     * or is but does not exist in this array, get 'default' columns.
-     *
      * @param string $view
      * @return array
      */
@@ -336,9 +294,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set results columns for given view, or if not specified,
-     * set the 'default' array of results columns with input.
-     *
      * @param array $results_columns
      * @param string $view
      */
@@ -348,8 +303,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get list of string columns that get queried in wildcard style.
-     *
      * @return array
      */
     public function getWildcardColumns()
@@ -358,8 +311,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set the list of string columns that get queried in wildcard style.
-     * 
      * @param array $wildcard_columns
      */
     public function setWildcardColumns($wildcard_columns)
@@ -384,8 +335,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     ];
 
     /**
-     * Get flags for various UI controls.
-     * 
      * @return array
      */
     public function getControls()
@@ -394,8 +343,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set flags for various UI controls.
-     * 
      * @param array $controls
      */
     public function setControls($controls)
@@ -404,8 +351,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get the flag for a single UI control.
-     * 
      * @param string $name
      * @return mixed
      */
@@ -415,8 +360,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set the flag for a single UI control.
-     * 
      * @param string $name
      * @param bool $enabled
      */
@@ -475,8 +418,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     ];
 
     /**
-     * Get pagination configuration.
-     *
      * @return array
      */
     public function getPaginationConfig()
@@ -485,8 +426,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set pagination configuration.
-     * 
      * @param array $pagination_config
      */
     public function setPaginationConfig($pagination_config)
@@ -524,8 +463,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     ];
 
     /**
-     * Get keyword search configuration.
-     *
      * @return array
      */
     public function getKeywordSearchConfig()
@@ -534,8 +471,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set keyword search configuration.
-     * 
      * @param array $keyword_search_config
      */
     public function setKeywordSearchConfig($keyword_search_config)
@@ -574,8 +509,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     ];
 
     /**
-     * Get named sorts.
-     * 
      * @return array
      */
     public function getSorts()
@@ -584,8 +517,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set named sorts.
-     * 
      * @param array $sorts
      */
     public function setSorts($sorts)
@@ -594,8 +525,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Return named or default orderBy instructions.
-     *
      * @param string $name
      * @return array
      */
@@ -605,8 +534,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get limits for named views.
-     * 
      * @return array
      */
     public function getViewLimits()
@@ -615,8 +542,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set limits for named views.
-     * 
      * @param array $view_limits
      */
     public function setViewLimits($view_limits)
@@ -625,8 +550,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Return named or default view limit.
-     *
      * @param string $view
      * @return int
      */
@@ -636,9 +559,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set limit for given view, or if not specified,
-     * set the 'default' view limit with input.
-     *
      * @param int $view_limit
      * @param string $view
      */
@@ -677,8 +597,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $logging = [];
 
     /**
-     * Get caching config.
-     *
      * @return array
      */
     public function getCaching()
@@ -694,8 +612,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set caching 'active' flag, or pass array including additional specs.
-     *
      * @param array|bool $caching
      */
     public function setCaching($caching)
@@ -707,8 +623,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get logging config.
-     *
      * @return array
      */
     public function getLogging()
@@ -723,8 +637,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set logging 'active' flag, or pass array including additional specs.
-     *
      * @param array|bool $logging
      */
     public function setLogging($logging)
@@ -763,8 +675,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $options = [];
 
     /**
-     * Get absolute_urls config.
-     *
      * @return bool
      */
     public function absoluteUrls()
@@ -777,8 +687,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set absolute_urls config.
-     *
      * @param boolean $absolute_urls
      */
     public function setAbsoluteUrls($absolute_urls)
@@ -787,8 +695,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
     
     /**
-     * Get paths config.
-     *
      * @return array
      */
     public function getPaths()
@@ -801,8 +707,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set paths config.
-     *
      * @param array $paths
      */
     public function setPaths($paths)
@@ -811,8 +715,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get path config element by key.
-     *
      * @param string $name
      * @return mixed
      */
@@ -824,8 +726,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set path config element by key.
-     *
      * @param string $name
      * @param string $path
      */
@@ -835,8 +735,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get options config.
-     *
      * @return array
      */
     public function getOptions()
@@ -851,8 +749,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set options config.
-     *
      * @param array $options
      */
     public function setOptions($options)
@@ -861,8 +757,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get options config element by key.
-     *
      * @param string $option
      * @return mixed
      */
@@ -874,8 +768,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set options config element by key.
-     *
      * @param string $name
      * @param string $option
      */
@@ -927,8 +819,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $weight_units = [];
 
     /**
-     * Get the formatter class.
-     *
      * @return string|null
      */
     public function getFormatter()
@@ -937,8 +827,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set the formatter class.
-     *
      * @param string $formatter
      */
     public function setFormatter($formatter)
@@ -947,8 +835,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get unit_conversions config.
-     *
      * @return bool
      */
     public function unitConversions()
@@ -961,8 +847,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set unit_conversions config.
-     *
      * @param boolean $unit_conversions
      */
     public function setUnitConversions($unit_conversions)
@@ -971,8 +855,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
     
     /**
-     * Get currencies config.
-     *
      * @return array
      */
     public function getCurrencies()
@@ -1004,8 +886,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set currencies config.
-     *
      * @param array $currencies
      */
     public function setCurrencies($currencies)
@@ -1014,8 +894,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get ruler_units config.
-     *
      * @return array
      */
     public function getRulerUnits()
@@ -1041,8 +919,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set ruler_units config.
-     *
      * @param array $ruler_units
      */
     public function setRulerUnits($ruler_units)
@@ -1051,8 +927,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get weight_units config.
-     *
      * @return array
      */
     public function getWeightUnits()
@@ -1078,8 +952,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set weight_units config.
-     *
      * @param array $weight_units
      */
     public function setWeightUnits($weight_units)
@@ -1123,8 +995,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $contexts = [];
 
     /**
-     * Get tables for multi-domain config.
-     * 
      * @return array
      */
     public function getTables()
@@ -1137,8 +1007,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set tables for multi-domain config.
-     * 
      * @param array $tables
      */
     public function setTables($tables)
@@ -1147,8 +1015,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get models for multi-domain config.
-     * 
      * @return array
      */
     public function getModels()
@@ -1161,8 +1027,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set models for multi-domain config.
-     * 
      * @param array $models
      */
     public function setModels($models)
@@ -1171,8 +1035,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Get contexts for multi-domain config.
-     *
      * @return array
      */
     public function getContexts()
@@ -1185,8 +1047,6 @@ class BasePublisherConfig implements PublisherConfigInterface
     }
 
     /**
-     * Set contexts for multi-domain config.
-     *
      * @param array $contexts
      */
     public function setContexts($contexts)

@@ -16,6 +16,7 @@ Quick-Links:
     - [Config (PublisherConfigInterface)](#config-publisherconfiginterface)
     - [Request (PublisherRequestInterface)](#request-publisherrequestinterface)
     - [Publisher (PublisherInterface)](#publisher-publisherinterface)
+    - [PublisherApi (PublisherApiInterface)](#publisherapi-publisherapiinterface)
     - [Repository (PublisherRepositoryInterface)](#repository-publisherrepositoryinterface)
     - [Model (PresentableInterface)](#model-presentableinterface)
     - [Presenter (PresenterInterface)](#presenter-presenterinterface)
@@ -62,7 +63,11 @@ Viewflex\Ligero\LigeroServiceProvider::class,
 
 The goal is to provide a versatile, extensible CRUD micro-framework that can be easily understood and deployed, while integrating all the necessary component types, following SOLID design principles, and enabling rapid modelling of domains in a Domain-Driven Design (DDD) fashion.
 
-The package architecture follows the Strategy Pattern, and is designed for simple or complex applications. A `Publisher` represents the assembly of components (configuration, request validation, presentation logic, domain logic, and database queries) that serve a particular business or application domain. The `PublisherInterface` provides the all the necessary methods for processing CRUD requests, returning raw or presented results, plus dynamic data for UI controls.
+The package architecture follows the Strategy Pattern, and is designed for simple or complex applications. A Publisher represents the assembly of components (configuration, request, presentation logic, domain logic, and database queries) that serve a particular business or application domain. The `PublisherInterface` provides the all the necessary methods for processing CRUD requests, returning raw or presented results, plus dynamic data for UI controls.
+
+This is an illustration of the pattern employed in this package, which can be used to output views or raw data.
+
+![publisher flow](https://raw.githubusercontent.com/viewflex/ligero-docs/master/img/publisher-flow.png)
 
 This pattern is easy to replicate for each domain, enabling rapid scaffolding of an application with many domains. The included demo illustrates deployment of both UI and API controllers, using the example Items domain. The demo also includes an example of a Context (in the DDD sense of the word), which encapsulates a Publisher and it's components.
 
@@ -103,7 +108,8 @@ Understanding these class types, and the different tasks they perform, is the ke
 
 This package includes several live examples, demonstrating a few of the ways in which a `Publisher` object can be created and used. The easiest way to get started using this package for your own projects would be to copy one of these implementations, changing the namespaces and class names.
 
-The namespace `Viewflex\Ligero\Publish` corresponds to the `publish/viewflex/ligero` directory in your Laravel project root. When you use `php artisan publish`, [as detailed below](#publishing-the-package-files), this directory will be created if not already existing.
+The namespace `Viewflex\Ligero\Publish` corresponds to the `publish/viewflex/ligero` directory in your Laravel project root. When you use `php artisan vendor:publish`, [as detailed below](#publishing-the-package-files), this directory will be created if not already existing.
+
 
 ### Config `PublisherConfigInterface`
 
@@ -314,9 +320,11 @@ initializeRequest($current)
 
 ### Publisher `PublisherInterface`
 
-The Publisher is the fusion of the domain layer and the presentation layer, extending presentation logic with stacked (decorating) classes. Regarding the Decorator Pattern, as used to layer new or modified functionality onto a Publisher without touching that class: The base `Publisher` class in the stack must have a Config, Request, and Repository - this is the `PublisherApi` (domain layer) - any number of additional Publisher classes can be stacked, with pass-throughs for all the interface methods, so we can modify functionality as desired while still conforming to the same `PublisherInterface`.
+The PublisherApi and it's encapsulating Publisher represent the the domain layer and the basic presentation layer, and allow customization via stacked (decorating) classes. Regarding the Decorator Pattern, as used to layer new or modified functionality onto a Publisher without touching that class: the base `Publisher` class in the stack must have a `PublisherApi` (domain layer), loaded with it's concrete Config, Request, and Repository implementations.
 
-For many (probably most) domain implementations, it will not be necessary to extend or decorate the package's base Publisher class, but if necessary, in order to incorporate specific domain logic, or to create a new base Publisher class for all domains, it is quite easy to do. These are the methods of `PublisherInterface`:
+The `Publisher` and `PublisherApi` classes use the `PublisherTrait` and `PublisherApiTrait`, respectively, which allows their core methods to be used in custom Publisher and PublisherApi classes. Because these classes have constructors, to enhance or modify functionality (not generally necessary) we do not extend them, but rather create new ones that expect injected component objects implementing extended interfaces.
+
+These are the methods of `PublisherInterface`:
 
 #### Component Objects
 
@@ -324,13 +332,6 @@ For many (probably most) domain implementations, it will not be necessary to ext
 getConfig()
 getRequest()
 getQuery()
-```
-
-#### Utility Functions
-
-```php
-urlSelf()
-inputsAreValid($inputs = [])
 ```
 
 #### Raw Data
@@ -379,21 +380,114 @@ action($inputs = null)
 
 Separate from this functionality, using 'select_all' as the 'action' parameter in a query will select all item checkboxes in the results display, via the `$form_item_checked` attribute for each row of results data passed to the views. This is useful when creating a pure HTML front end, where JavaScript can't be used to manipulate UI elements.
 
+
+#### Utility Functions
+
+```php
+urlSelf()
+inputsAreValid($inputs = [])
+```
+
+
+### PublisherApi `PublisherApiInterface`
+
+The PublisherApi is the core of the package's functionality - many of the Publisher methods pass through to the class implementing this interface, which has additional methods providing more granular access to the encapsulated logic and individual properties. These are the methods of `PublisherApiInterface`:
+
+#### Component Objects
+
+```php
+getConfig()
+getRequest()
+getQuery()
+```
+
+#### Initialization
+
+```php
+setQuery($query)
+```
+
+#### Raw Data
+
+Get results, data for dynamic UI controls, and full info on query.
+
+```php
+getQueryInfo()
+found()
+displayed()
+getResults()
+getItems()
+getPagination()
+getKeywordSearch()
+getData()
+```
+
+#### Dynamically Formatted Results
+
+These methods output presented rather than raw results, as configured in the Presenter class.
+
+```php
+presentItems()
+presentData()
+```
+
+#### Query Input Parameters
+
+```php
+getRoute()
+getQueryParameters()
+getQueryKeyword()
+getQueryView()
+getQuerySort()
+getQueryLimit()
+getQueryStart()
+getQueryPage()
+getUrlBaseParameters()
+```
+
+#### Utility Functions
+
+```php
+getRequestParameters()
+dbQueryParameters($parameters = [])
+getUrlParametersExcept($skip = [])
+urlQueryString($parameters = [])
+urlQueryWithStart($params, $start)
+urlQueryWithPage($params, $page)
+urlSelf()
+```
+
+#### Standard CRUD Actions
+
+```php
+store()
+update()
+delete()
+```
+
+#### Multi-Record List Actions
+
+```php
+action()
+```
+
+
 ### Repository `PublisherRepositoryInterface`
 
-The Repository Pattern specifies a separation of the domain layer from the storage layer. This doesn't mean a complete decoupling - the `BasePublisherRepository` (storage) has access to the public methods of the `PublisherApi` (domain) in order to do it's job better.
+The Repository Pattern specifies a separation of the domain layer from the storage layer. This doesn't mean a complete decoupling - while the `PublisherApi` (domain) has access to the Repository (storage), the Repository also has access to the public methods of the `PublisherApi` in order to do it's job better.
 
-The `PublisherApi` provides the `Publisher` with access to the Repository; the Publisher then decorates the results and makes them available to the wider application as specified by the `PublisherInterface`.The key relationship in the Repository Pattern as implemented here is the one between the domain and the storage - this applies not only to the Publisher as used to provide CRUD listing functionality, but to the business domains that will implement this pattern to represent their own specialized functionality.
+The `PublisherApi` provides the `Publisher` with access to the Repository; the `Publisher` then makes the results available to the wider application as specified by the `PublisherInterface`. The key relationship in the pattern implemented here is the one between the domain and the storage - this applies not only to the `PublisherApi` as used to provide CRUD functionality, but to the business domains that will implement this pattern to represent their own specialized functionality.
 
-The base Repository uses Eloquent/Query Builder to take advantage of collections, but if needed to improve speed, it can also be decorated, in the same way as Publishers, to use raw SQL, or an entirely different storage endpoint. The `BasePublisherRepository` of the package may be used as a base for all application domains to use, decorate or extend. Configurable caching and logging of queries is handled automatically.
+The base Repository uses Eloquent/Query Builder to take advantage of collections, but if needed to improve speed, it can also be decorated, in the same way as Publishers, to use raw SQL, or an entirely different storage endpoint. The `BasePublisherRepository` class may be used as a base for all application domains to use or extend.
 
-These are the methods of the `PublisherRepositoryInterface`:
+These are the methods of `PublisherRepositoryInterface`:
 
 
 #### Initialization
 
 ```php
 loadModel()
+setApi(PublisherApiInterface $api)
 ```
 
 #### Database Read Operations
@@ -617,8 +711,8 @@ In Laravel, a resourceful controller's routes can be specified with one line, bu
 Additional routes for the controller should always be listed first. These two routes provide some additional functionality to the CRUD layer:
 
 ```php
-Route::get('ligero/items/json', array('as' => 'ligero.items.json', 'uses' => '\Viewflex\Ligero\Demo\Items\ItemsController@json', 'middleware' => 'web'));
-Route::get('ligero/items/action', array('as' => 'ligero.items.action', 'uses' => '\Viewflex\Ligero\Demo\Items\ItemsController@action', 'middleware' => 'web'));
+Route::get('ligero/items/json', array('as' => 'ligero.items.json', 'uses' => '\Viewflex\Ligero\Publish\Demo\Items\ItemsController@json', 'middleware' => 'web'));
+Route::get('ligero/items/action', array('as' => 'ligero.items.action', 'uses' => '\Viewflex\Ligero\Publish\Demo\Items\ItemsController@action', 'middleware' => 'web'));
 ```
 
 These are the resource controller routes:
@@ -978,7 +1072,7 @@ The `BasePublisherRepository` `store()`, `update()` and `delete()` methods trans
 
 ## Customization
 
-This package comes with a demo domain, 'Items', that provides examples of publishing a domain with both a UI controller and an API controller. This demo can be used without using `php artisan vendor:publish` to copy the files for modification, but to either play around with the demo 'Items' domain or create new domains for your application, just use the `publish` command with the `ligero` tag (as described below).
+This package comes with a demo domain, 'Items', that provides examples of publishing a domain with both a UI controller and an API controller. To install the demo 'Items' domain to play around with it, or to use it as boilerplate for a new domain, just run the `publish` command with the `ligero` tag, run the migration, and seed the demo database table, as described below.
 
 Copy and rename the demo files you need and change the class names, to implement Publishers for custom domains. Copy and rename the resource files (views and lang), and customize as needed.
 
@@ -986,6 +1080,14 @@ Copy and rename the demo files you need and change the class names, to implement
 ### Publishing the Package Files
 
 The package service provider configures `artisan` to publish specific file groups with tags. There are several option available in this package.
+
+#### Routes
+
+Run this command to publish the `routes.php` file to the project's `publish/viewflex/listo` directory:
+
+```bash
+php artisan vendor:publish  --tag='ligero-routes'
+```
 
 #### Config
 
@@ -1003,7 +1105,7 @@ Run this command to publish the blade templates for the demo UI, and lang files 
 php artisan vendor:publish  --tag='ligero-resources'
 ```
 
-#### Demo Migration and Seeder
+#### Routes, Demo Migration and Seeder
 
 Run this command to install the migration and seeder for the 'Items' demo domain:
 
@@ -1023,7 +1125,7 @@ Then run the seeder:
 php artisan db:seed --class="LigeroSeeder"
 ```
 
-#### Config, Resources, Demo Migration and Seeder
+#### Routes, Config, Resources, Demo Migration and Seeder
 
 Use this command to publish config, demo views, and lang files for modification. The demo migration and seeder are also copied to their proper directories:
 
@@ -1033,11 +1135,11 @@ php artisan vendor:publish  --tag='ligero'
 
 ### Extending or Decorating Base Classes
 
-Ligero's architecture is based on distinct pattern of class types, each defined by an interface; since classes relate to each other as abstract types, you can easily substitute your own custom classes, provided that they implement the same interfaces.
+Ligero's architecture is based on a distinct pattern of class types, each defined by an interface; since classes relate to each other as abstract types, you can easily substitute your own custom classes, provided that they implement the same interfaces.
 
 ### Namespace for Custom Classes
 
-The `Viewflex\Ligero\Publish` namespace, corresponding to the `publish/viewflex/ligero` directory, is recognized by the package, and is intended for organization of your custom classes. The Items demo classes will be published (copied) to this directory for customization.
+The `Viewflex\Ligero\Publish` namespace, corresponding to the `publish/viewflex/ligero` directory, is recognized by the package, and is intended for organization of your custom classes. The Items demo classes will be published (copied) to this directory for customization, along with the demo routes file.
 
 ## Tests
 

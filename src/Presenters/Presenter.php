@@ -15,7 +15,7 @@ use Viewflex\Ligero\Utility\Formatter as DefaultFormatter;
 abstract class Presenter implements PresenterInterface
 {
     /**
-     * The model instance currently in use.
+     * The model instance.
      *
      * @var
      */
@@ -24,12 +24,12 @@ abstract class Presenter implements PresenterInterface
     /**
      * The optional publisher config object.
      *
-     * @var PublisherConfigInterface
+     * @var null|PublisherConfigInterface
      */
     protected $config = null;
 
     /**
-     * The optional formatter object with required utility functions.
+     * The optional formatter object.
      *
      * @var
      */
@@ -76,8 +76,6 @@ abstract class Presenter implements PresenterInterface
     }
 
     /**
-     * Get the model instance being used.
-     *
      * @return mixed
      */
     public function getEntity()
@@ -86,8 +84,6 @@ abstract class Presenter implements PresenterInterface
     }
 
     /**
-     * Set the model instance to use.
-     *
      * @param $entity
      * @return PresenterInterface
      */
@@ -134,9 +130,6 @@ abstract class Presenter implements PresenterInterface
     }
     
     /**
-     * Make sure the presenter's config reference
-     * has been set, for methods that require it.
-     *
      * @throws PresenterException
      */
     public function requireConfig()
@@ -146,8 +139,6 @@ abstract class Presenter implements PresenterInterface
     }
     
     /**
-     * Make sure the attribute exists before trying to use it.
-     *
      * @param $column
      * @throws PresenterException
      */
@@ -158,10 +149,6 @@ abstract class Presenter implements PresenterInterface
     }
     
     /**
-     * Magic method calls a presentation method if
-     * it exists, otherwise gets object attribute.
-     * Throws error on missing method/attribute.
-     *
      * @param $property
      * @return mixed
      * @throws PresenterException

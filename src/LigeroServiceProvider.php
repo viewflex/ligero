@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class LigeroServiceProvider extends ServiceProvider
 {
-
 	/**
 	 * Bootstrap the application services.
 	 *
@@ -16,6 +15,16 @@ class LigeroServiceProvider extends ServiceProvider
 	{
 		$resource_namespace = 'ligero';
 
+		/*
+        |--------------------------------------------------------------------------
+        | Publish Routes File
+        |--------------------------------------------------------------------------
+        */
+
+		$this->publishes([
+			__DIR__.'/Publish/routes.php' => base_path('publish/viewflex/ligero/routes.php')
+		], 'ligero-routes');
+		
 		/*
     	|--------------------------------------------------------------------------
     	| Set the Default Internal Namespace for Translations and Views
@@ -38,11 +47,12 @@ class LigeroServiceProvider extends ServiceProvider
 
 		/*
         |--------------------------------------------------------------------------
-        | Publish Migration and Seeder to the Database Directory
+        | Publish Routes, Migration and Seeder to the Database Directory
         |--------------------------------------------------------------------------
         */
 
 		$this->publishes([
+            __DIR__.'/Publish/routes.php' => base_path('publish/viewflex/ligero/routes.php'),
 			__DIR__ . '/Database/Migrations' => base_path('database/migrations'),
 			__DIR__ . '/Database/Seeds' => base_path('database/seeds')
 		], 'ligero-data');
@@ -63,7 +73,7 @@ class LigeroServiceProvider extends ServiceProvider
 
 		/*
         |--------------------------------------------------------------------------
-        | Publish Config, Resources, Migration and Seeder
+        | Publish Routes, Config, Resources, Migration and Seeder
         |--------------------------------------------------------------------------
         */
 
@@ -71,7 +81,8 @@ class LigeroServiceProvider extends ServiceProvider
 			__DIR__ . '/Config/ligero.php' => config_path('ligero.php'),
 			__DIR__ . '/Database/Migrations' => base_path('database/migrations'),
 			__DIR__ . '/Database/Seeds' => base_path('database/seeds'),
-			__DIR__ . '/Publish' => base_path('publish/viewflex/ligero'),
+            __DIR__ . '/Publish/Demo' => base_path('publish/viewflex/ligero/Demo'),
+            __DIR__ . '/Publish/routes.php' => base_path('publish/viewflex/ligero/routes.php'),
             __DIR__ . '/Resources/lang' => base_path('resources/lang/vendor/ligero'),
             __DIR__ . '/Resources/views' => base_path('resources/views/vendor/ligero')
 		], 'ligero');
@@ -85,14 +96,15 @@ class LigeroServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-
-        /*
+		/*
     	|--------------------------------------------------------------------------
-    	| Include Package Routes File.
+    	| Include the Routes File Published for Customization, if it exists.
     	|--------------------------------------------------------------------------
     	*/
 
-		require __DIR__ . '/routes.php';
+		$published_routes = base_path('publish/viewflex/ligero/routes.php');
+		if (file_exists($published_routes))
+			require $published_routes;
 		
     }
 

@@ -23,32 +23,44 @@ interface PublisherRequestInterface
     public function rules();
 
     /**
+     * Get request's rules array.
+     * 
      * @return array
      */
     public function getRules();
 
     /**
+     * Set request's rules array.
+     * 
      * @param array $rules
      */
     public function setRules($rules);
 
     /**
+     * Set a specific rule.
+     * 
      * @param string $name
      * @param string $value
      */
     public function setRule($name, $value);
         
     /**
+     * Get custom rules array for POST/PUT/PATCH/DELETE requests.
+     * 
      * @return array
      */
     public function getPostRules();
 
     /**
+     * Set custom rules array for POST/PUT/PATCH/DELETE requests.
+     * 
      * @param array $post_rules
      */
     public function setPostRules($post_rules);
 
     /**
+     * Set a specific rule for POST/PUT/PATCH/DELETE requests.
+     * 
      * @param string $name
      * @param string $value
      */
@@ -56,7 +68,7 @@ interface PublisherRequestInterface
 
     /*
     |--------------------------------------------------------------------------
-    | Inputs
+    | Inputs for GET Queries
     |--------------------------------------------------------------------------
     */
     
@@ -75,6 +87,12 @@ interface PublisherRequestInterface
      */
     public function getQueryInput($key = '');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Inputs for GET Queries or POST Requests
+    |--------------------------------------------------------------------------
+    */
+    
     /**
      * Gets all the inputs for current method (GET|POST).
      *

@@ -1,52 +1,26 @@
 <?php
 
-namespace Viewflex\Ligero\Contracts;
+namespace Viewflex\Ligero\Publishers;
 
-use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
-use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
-use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
+use Illuminate\Support\Facades\Validator;
 
-interface PublisherInterface
+trait PublisherTrait
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Component Objects
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Returns the config used by publisher.
-     *
-     * @return Config
-     */
-    public function getConfig();
-
-    /**
-     * Returns the request used by publisher.
-     *
-     * @return Request
-     */
-    public function getRequest();
-
-    /**
-     * Returns the query used by publisher.
-     *
-     * @return Query
-     */
-    public function getQuery();
-    
     /*
     |--------------------------------------------------------------------------
     | API Data
     |--------------------------------------------------------------------------
     */
-    
+
     /**
-     * Returns info on query and results.
+     * Get info on query and results.
      *
-     * @return mixed
+     * @return array
      */
-    public function getQueryInfo();
+    public function getQueryInfo()
+    {
+        return $this->api->getQueryInfo();
+    }
 
     /**
      * Returns total number of records that would be found
@@ -54,55 +28,77 @@ interface PublisherInterface
      *
      * @return int
      */
-    public function found();
+    public function found()
+    {
+        return $this->api->found();
+    }
 
     /**
      * Returns the number of records actually returned by publisher query.
      *
      * @return int
      */
-    public function displayed();
-    
-    /**
-     * Returns the results of listing query in native format.
-     *
-     * @return mixed
-     */
-    public function getResults();
+    public function displayed()
+    {
+        return $this->api->displayed();
+    }
 
     /**
-     * Returns the results of listing query as array or null.
+     * Returns the results of publisher query in native format.
      *
      * @return mixed
      */
-    public function getItems();
+    public function getResults()
+    {
+        return $this->api->getResults();
+    }
+
+    /**
+     * Returns the results of publisher query as array or null.
+     *
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->api->getItems();
+    }
 
     /**
      * Returns API data for pagination UI controls and labels.
      *
      * @return mixed
      */
-    public function getPagination();
-
+    public function getPagination()
+    {
+        return $this->api->getPagination();
+    }
+    
     /**
      * Get API keyword query parameters and config. The persist_keyword
      * config determines whether input gets re-used as a prompt in
-     * the generated UI control. All other params are returned.
+     * the generated UI control. All query and display params
+     * to be used in form are returned as parameters array.
      *
      * @return mixed
      */
-    public function getKeywordSearch();
+    public function getKeywordSearch()
+    {
+        return $this->api->getKeywordSearch();
+    }
 
     /**
      * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
-    public function getData();
+    public function getData()
+    {
+        return $this->api->getData();
+    }
 
     /*
     |--------------------------------------------------------------------------
-    | Dynamically Formatted Results
+    | Dynamically Formatted Results - Override to Customize
     |--------------------------------------------------------------------------
     */
 
@@ -111,15 +107,20 @@ interface PublisherInterface
      *
      * @return array|null
      */
-    public function presentItems();
+    public function presentItems()
+    {
+        return $this->api->presentItems();
+    }
 
     /**
      * Returns all publisher API data bundles together, along with query info.
      *
      * @return array
      */
-    public function presentData();
-
+    public function presentData()
+    {
+        return $this->api->presentData();
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -128,13 +129,19 @@ interface PublisherInterface
     */
 
     /**
-     * Returns the results of publisher query on id in native or array format.
+     * Returns the result of publisher query on id in native or array format, or null.
      *
      * @param int $id
      * @param bool $native
      * @return mixed
      */
-    public function find($id, $native = true);
+    public function find($id, $native = true)
+    {
+        $this->request->setMethod('GET');
+        $this->request->setInputs(['id' => $id]);
+        $result = $native ? $this->getResults() : $this->getItems();
+        return $result ? ($native ? $result->first() : $result[0]) : null;
+    }
 
     /**
      * Returns the results of publisher query in native or array format, or null.
@@ -143,7 +150,12 @@ interface PublisherInterface
      * @param bool $native
      * @return mixed
      */
-    public function findBy($inputs = [], $native = true);
+    public function findBy($inputs = [], $native = true)
+    {
+        $this->request->setMethod('GET');
+        $this->request->setInputs($inputs);
+        return $native ? $this->getResults() : $this->getItems();
+    }
 
     /**
      * Store an item, using explicit or pre-configured request inputs, returning new id.
@@ -151,7 +163,15 @@ interface PublisherInterface
      * @param null|array $inputs
      * @return int
      */
-    public function store($inputs = null);
+    public function store($inputs = null)
+    {
+        if ($inputs) {
+            $this->request->setMethod('POST');
+            $this->request->setInputs($inputs);
+        }
+
+        return $this->api->store();
+    }
 
     /**
      * Update an item, using explicit or pre-configured request inputs, returning number of rows affected.
@@ -159,7 +179,15 @@ interface PublisherInterface
      * @param null|array $inputs
      * @return int
      */
-    public function update($inputs = null);
+    public function update($inputs = null)
+    {
+        if ($inputs) {
+            $this->request->setMethod('POST');
+            $this->request->setInputs($inputs);
+        }
+
+        return $this->api->update();
+    }
 
     /**
      * Delete an item, using explicit or pre-configured request input, returning number of rows affected.
@@ -167,14 +195,22 @@ interface PublisherInterface
      * @param null|int $id
      * @return int
      */
-    public function delete($id = null);
+    public function delete($id = null)
+    {
+        if ($id) {
+            $this->request->setMethod('POST');
+            $this->request->setInputs(['id' => $id]);
+        }
+
+        return $this->api->delete();
+    }
 
     /*
     |--------------------------------------------------------------------------
     | Publisher Multi-Record List Actions
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Calls the appropriate db query, returning number of rows affected.
      * Also sets the session's 'message' attribute for visual feedback.
@@ -186,7 +222,15 @@ interface PublisherInterface
      * @param mixed $inputs
      * @return int
      */
-    public function action($inputs = null);
+    public function action($inputs = null)
+    {
+        $this->request->setMethod('GET');
+        if ($inputs) {
+            $this->request->setInputs($inputs);
+        }
+
+        return $this->api->action();
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -200,7 +244,10 @@ interface PublisherInterface
      *
      * @return string
      */
-    public function urlSelf();
+    public function urlSelf()
+    {
+        return $this->api->urlSelf();
+    }
 
     /**
      * Validates inputs against the rules of this publisher instance.
@@ -208,6 +255,10 @@ interface PublisherInterface
      * @param array $inputs
      * @return bool
      */
-    public function inputsAreValid($inputs = []);
+    public function inputsAreValid($inputs = [])
+    {
+        $validator = Validator::make($inputs, $this->request->rules());
+        return $validator->passes();
+    }
     
 }
