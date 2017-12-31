@@ -83,6 +83,7 @@ class ItemsContext extends BaseContext
         $this->request->setPostRule('category', 'max:25');
         $this->request->setPostRule('subcategory', 'max:25');
         $this->request->setPostRule('description', 'max:250');
+        $this->request->setPostRule('price', 'numeric');
 
         /*
         |--------------------------------------------------------------------------

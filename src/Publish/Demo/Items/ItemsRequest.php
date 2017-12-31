@@ -50,6 +50,7 @@ class ItemsRequest extends BasePublisherRequest
         'subcategory'   => 'max:25',
         'description'   => 'max:250',
         'price'         => 'numeric|min:0',
+        
         'action'        => 'max:16',
         'items'         => 'array',
         'options'       => 'array'
