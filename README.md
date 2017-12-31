@@ -611,13 +611,15 @@ contextInputsAreValid($inputs)
 
 ## Controllers and Contexts
 
-The controller or Context is typically where concrete classes are specified as components of a Publisher, corresponding to the Config, Request, and Repository interfaces.
+A Controller or Context is typically where concrete classes are specified as components of a Publisher, corresponding to the Config, Request, and Repository interfaces.
 
-The `BasePublisherController` and `BaseContext` classes use the `HasPublisher` trait, which provides `createPublisher()` and `createPublisherWithDefaults()`.
+The `BasePublisherController` and `BaseContext` classes use the `HasPublisher` trait, which provides methods to create new publishers. The `BasePublisherController` action methods are broken out into the `HasPublisherUI` trait, to allow them to be used in custom Controller classes.
 
-The `ItemsController` class in this package (for demo and testing) provides an example of extending the base UI controller, and using it's Publisher instance. See the [Advanced Usage](#advanced-usage) section below to learn about creating a Publisher instance within a Context, for greater encapsulation and flexibility (see the `ItemsContext` class).
+The `ItemsController` class in this package (for demo and testing) provides an example of extending the base UI controller, and using it's Publisher instance.
 
-The `BasePublisherController` class provides these methods - corresponding to the standard resourceful controller methods in Laravel:
+See the [Advanced Usage](#advanced-usage) section below to learn about creating a Publisher instance within a Context, for greater encapsulation and flexibility (see the `ItemsContext` class).
+
+The `BasePublisherController` class provides these methods (via the `HasPublisherUI` trait) - corresponding to the standard resourceful controller methods in Laravel:
 
 ```php
 index()
@@ -817,9 +819,9 @@ class ProductsController extends BasePublisherController
 
 ##### Configuration With Custom Publisher
 
-The base `Publisher` class has all the necessary CRUD capabilities plus a full suite of dynamically generated UI components, and is completely configurable in multiple ways. Still, for domains that must aggregate data and functionality across multiple domains, you can extend this class to incorporate more complex domain logic, queries, and composition.
+The base `Publisher` class has all the necessary CRUD capabilities plus a full suite of dynamically generated UI components, and is completely configurable in multiple ways. Still, for domains that must aggregate data and functionality across multiple domains, you can create a custom Publisher class that incorporates more complex domain logic, queries, and composition.
 
-In this example, custom Config, Request, and Repository instances are injected (via IoC resolution) into a custom Publisher class, to create the Publisher instance that will be used by this UI controller.
+In this example, custom Config, Request, and Repository instances are injected to create the custom Publisher instance that will be used by this UI controller.
 
 ```php
 use My\Package\Products\ProductsPublisherConfig as Config;
@@ -983,6 +985,8 @@ use Viewflex\Ligero\Contracts\ContextInterface as Context;
 
 class ContextApiController extends Controller
 {
+    use HasContextApi;
+
     /**
      * @var array
      */
@@ -1003,30 +1007,11 @@ class ContextApiController extends Controller
         $this->inputs = json_decode(request()->getContent(), true);
         $this->contexts = config('ligero.contexts', []);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | JSON Publisher Query Actions
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Returns the results of json publisher query on id in native or array format.
-     *
-     * @param string $key
-     * @return array
-     */
-    public function find($key)
-    {
-        $this->context = new $this->contexts[$key];
-        return $this->context->find($this->inputs['id'], false);
-    }
-    ...
-
+    
 }
 ```
 
-These are the built-in API routes for Context actions:
+You will notice that as with the UI controller, the API controller uses a trait (`HasContextApi`) containing the controller action methods, so they can be easily used in custom API controllers. These are the built-in API routes for Context actions:
 
 ```php
 // Standard CRUD domain actions...
