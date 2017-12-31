@@ -92,24 +92,36 @@ class BasePresenter extends Presenter
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * @return string
+     */
     public function price()
     {
         $this->requireColumn('price');
         return $this->formatter->formatMoney($this->entity->price);
     }
 
+    /**
+     * @return string
+     */
     public function priceRound()
     {
         $this->requireColumn('price');
         return $this->formatter->formatMoneyRound($this->entity->price);
     }
 
+    /**
+     * @return string
+     */
     public function altPrice()
     {
         $this->requireColumn('price');
         return $this->formatter->formatAltMoney($this->formatter->convertMoney($this->entity->price));
     }
 
+    /**
+     * @return string
+     */
     public function altPriceRound()
     {
         $this->requireColumn('price');
@@ -122,24 +134,36 @@ class BasePresenter extends Presenter
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * @return string
+     */
     public function length()
     {
         $this->requireColumn('length');
         return $this->formatter->formatLength($this->entity->length);
     }
 
+    /**
+     * @return string
+     */
     public function width()
     {
         $this->requireColumn('width');
         return $this->formatter->formatLength($this->entity->width);
     }
 
+    /**
+     * @return string
+     */
     public function depth()
     {
         $this->requireColumn('depth');
         return $this->formatter->formatLength($this->entity->depth);
     }
 
+    /**
+     * @return string
+     */
     public function dimensions()
     {
         $dimensions = '';
@@ -158,30 +182,45 @@ class BasePresenter extends Presenter
         return $dimensions;
     }
 
+    /**
+     * @return string
+     */
     public function weight()
     {
         $this->requireColumn('weight');
         return $this->formatter->formatWeight($this->entity->weight);
     }
 
+    /**
+     * @return string
+     */
     public function altLength()
     {
         $this->requireColumn('length');
         return $this->formatter->formatAltLength($this->formatter->convertLength($this->entity->length));
     }
 
+    /**
+     * @return string
+     */
     public function altWidth()
     {
         $this->requireColumn('width');
         return $this->formatter->formatAltLength($this->formatter->convertLength($this->entity->width));
     }
 
+    /**
+     * @return string
+     */
     public function altDepth()
     {
         $this->requireColumn('depth');
         return $this->formatter->formatAltLength($this->formatter->convertLength($this->entity->depth));
     }
 
+    /**
+     * @return string
+     */
     public function altDimensions()
     {
         $dimensions = '';
@@ -200,6 +239,9 @@ class BasePresenter extends Presenter
         return $dimensions;
     }
 
+    /**
+     * @return string
+     */
     public function altWeight()
     {
         $this->requireColumn('weight');
