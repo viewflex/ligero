@@ -3,36 +3,57 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsConfig as Config;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRequest as Request;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRepository as Query;
-use Viewflex\Ligero\Publishers\HasPublisher;
+use Viewflex\Ligero\Publish\Demo\Items\ItemsContext as Context;
 
-class LigeroFunctionalTest extends TestCase
+class LigeroContextTest extends TestCase
 {
-    use HasPublisher;
     use DatabaseTransactions;
 
     protected function setUp()
     {
         parent::setUp();
-
-        $this->createPublisher(new Config, new Request, new Query);
+        
         LigeroTestData::create(['ligero_items' => 'ligero_items']);
+
+        $this->context = new Context;
     }
 
 
-    public function test_publisher_find()
+    public function test_context_find()
     {
-        $this->assertEquals('North Face Fleece Pullover', $this->publisher->find(2, false)['name']);
+        $expected = [
+            "success" => 1,
+            "msg" => null,
+            "data" => [
+                "id" => 2,
+                "active" => "1",
+                "name" => "North Face Fleece Pullover",
+                "category" => "Outerwear",
+                "subcategory" => "Unisex",
+                "description" => "",
+                "price" => "49.9"
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->context->find(2, false));
     }
 
-    public function test_publisher_findBy()
+    public function test_context_findBy()
     {
-        $this->assertEquals(2, $this->publisher->findBy(['name' => 'North Face Fleece Pullover'], false)[0]['id']);
+        $expected = [
+            "id" => 2,
+            "active" => "1",
+            "name" => "North Face Fleece Pullover",
+            "category" => "Outerwear",
+            "subcategory" => "Unisex",
+            "description" => "",
+            "price" => "49.9"
+        ];
+
+        $this->assertEquals($expected, $this->context->findBy(['name' => 'North Face Fleece Pullover'], false)['data'][0]);
     }
 
-    public function test_publisher_store()
+    public function test_context_store()
     {
         $inputs = [
             'active' => '1',
@@ -44,21 +65,20 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Save the record, getting it's id.
-        $this->request->setInputs($inputs);
-        $id = $this->publisher->store();
+        $id = $this->context->store($inputs)['data'];
         $this->assertGreaterThan(0, $id);
 
-        // Search by id, should find exactly one record.
-        $this->request->setInputs(['id' => $id]);
-        $this->assertEquals(1, $this->publisher->found());
+        // Search by id, should find it.
+        $this->assertEquals(1, $this->context->find($id, false)['success']);
 
         // See if the new record conforms to input.
-        $item = $this->publisher->getItems()[0];
+        $item = $this->context->find($id, false)['data'];
         $this->assertEquals($inputs, array_except($item, 'id'));
+
     }
 
 
-    public function test_publisher_update()
+    public function test_context_update()
     {
         $inputs = [
             'active' => '1',
@@ -70,13 +90,11 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Save the record, getting it's id.
-        $this->request->setInputs($inputs);
-        $id = $this->publisher->store();
+        $id = $this->context->store($inputs)['data'];
         $this->assertGreaterThan(0, $id);
 
-        // Search by id, should find exactly one record.
-        $this->request->setInputs(['id' => $id]);
-        $this->assertEquals(1, $this->publisher->found());
+        // Search by id, should find it.
+        $this->assertEquals(1, $this->context->find($id, false)['success']);
 
         $new_inputs = [
             'id' => $id,
@@ -89,26 +107,23 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Modify the existing record, getting number of rows affected (should be 1).
-        $this->request->setInputs($new_inputs);
-        $affected = $this->publisher->update();
+        $affected = $this->context->update($new_inputs)['data'];
         $this->assertEquals(1, $affected);
-        
+
         // See if the modified record conforms to new input.
-        $this->request->setInputs(['id' => $id]);
-        $item = $this->publisher->getItems()[0];
+        $item = $this->context->find($id, false)['data'];
         $this->assertEquals($new_inputs, $item);
     }
 
 
-    public function test_publisher_delete()
+    public function test_context_delete()
     {
         // Delete an existing record, getting number of rows affected (should be 1).
-        $this->request->setInputs(['id' => 2]);
-        $affected = $this->publisher->delete();
+        $affected = $this->context->delete(2)['data'];
         $this->assertEquals(1, $affected);
 
         // See if the record can still be found.
-        $this->assertEquals(0, $this->publisher->find(2));
+        $this->assertEquals(0, $this->context->find(2)['success']);
     }
 
 }
