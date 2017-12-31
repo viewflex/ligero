@@ -13,8 +13,6 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
     */
     
     /**
-     * Returns the results of context query on id in native or array format.
-     *
      * @param int $id
      * @param bool $native
      * @return mixed
@@ -34,9 +32,6 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
     }
 
     /**
-     * Querying on the inputs provided, which may not have been validated,
-     * returns the results of context query in native or array format.
-     *
      * @param array $inputs
      * @param bool $native
      * @return mixed
@@ -59,5 +54,30 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
         // Return the contexts in response data.
         return $this->contextResponse(1, null, $contexts);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Context Output Composition
+    |--------------------------------------------------------------------------
+    */
+    
+    /**
+     * @param $root
+     * @param bool $native
+     * @return array
+     */
+    abstract public function getContext($root, $native = true);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Context Input Validation
+    |--------------------------------------------------------------------------
+    */
+    
+    /**
+     * @param array $inputs
+     * @return array|bool
+     */
+    abstract public function contextInputsAreValid($inputs);
     
 }
