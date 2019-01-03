@@ -3,15 +3,59 @@
 namespace Viewflex\Ligero\Publish\Demo\Items;
 
 use Viewflex\Ligero\Base\BasePublisherController;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsConfig as Config;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRequest as Request;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRepository as Query;
 
 class ItemsController extends BasePublisherController
 {
-    public function __construct(Config $config, Request $request, Query $query)
+
+    public function __construct()
     {
-        $this->createPublisher($config, $request, $query);
+
+        $this->createPublisherWithDefaults();
+
+        $this
+            ->setDomain('Items')
+            ->setTranslationFile('items')
+            ->setTableName('ligero_items')
+            ->setModelName('Viewflex\Ligero\Publish\Demo\Items\Item')
+            ->setResultsColumns([
+                'id',
+                'active',
+                'name',
+                'category',
+                'subcategory',
+                'description',
+                'price'
+            ])
+            ->setWildcardColumns([
+                'category'
+            ])
+            ->setControls([
+                'pagination'        => true,
+                'keyword_search'    => true
+            ])
+            ->setKeywordSearchColumns([
+                'name',
+                'category',
+                'subcategory',
+                'description'
+            ])
+            ->setQueryRules([
+                'id'                => 'numeric|min:1',
+                'active'            => 'boolean',
+                'name'              => 'max:60',
+                'category'          => 'max:25',
+                'subcategory'       => 'max:25'
+            ])
+            ->setRequestRules([
+                'id'                => 'numeric|min:1',
+                'active'            => 'boolean',
+                'name'              => 'max:60',
+                'category'          => 'max:25',
+                'subcategory'       => 'max:25',
+                'description'       => 'max:250',
+                'price'             => 'numeric'
+            ]);
+
     }
-    
+
 }

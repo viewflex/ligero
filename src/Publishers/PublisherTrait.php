@@ -19,7 +19,7 @@ trait PublisherTrait
      */
     public function getQueryInfo()
     {
-        return $this->api->getQueryInfo();
+        return $this->getApi()->getQueryInfo();
     }
 
     /**
@@ -30,7 +30,7 @@ trait PublisherTrait
      */
     public function found()
     {
-        return $this->api->found();
+        return $this->getApi()->found();
     }
 
     /**
@@ -40,7 +40,7 @@ trait PublisherTrait
      */
     public function displayed()
     {
-        return $this->api->displayed();
+        return $this->getApi()->displayed();
     }
 
     /**
@@ -50,7 +50,7 @@ trait PublisherTrait
      */
     public function getResults()
     {
-        return $this->api->getResults();
+        return $this->getApi()->getResults();
     }
 
     /**
@@ -60,7 +60,7 @@ trait PublisherTrait
      */
     public function getItems()
     {
-        return $this->api->getItems();
+        return $this->getApi()->getItems();
     }
 
     /**
@@ -70,7 +70,7 @@ trait PublisherTrait
      */
     public function getPagination()
     {
-        return $this->api->getPagination();
+        return $this->getApi()->getPagination();
     }
     
     /**
@@ -83,7 +83,7 @@ trait PublisherTrait
      */
     public function getKeywordSearch()
     {
-        return $this->api->getKeywordSearch();
+        return $this->getApi()->getKeywordSearch();
     }
 
     /**
@@ -93,7 +93,7 @@ trait PublisherTrait
      */
     public function getData()
     {
-        return $this->api->getData();
+        return $this->getApi()->getData();
     }
 
     /*
@@ -109,7 +109,7 @@ trait PublisherTrait
      */
     public function presentItems()
     {
-        return $this->api->presentItems();
+        return $this->getApi()->presentItems();
     }
 
     /**
@@ -119,7 +119,7 @@ trait PublisherTrait
      */
     public function presentData()
     {
-        return $this->api->presentData();
+        return $this->getApi()->presentData();
     }
 
     /*
@@ -137,8 +137,8 @@ trait PublisherTrait
      */
     public function find($id, $native = true)
     {
-        $this->request->setMethod('GET');
-        $this->request->setInputs(['id' => $id]);
+        $this->getRequest()->setMethod('GET');
+        $this->getRequest()->setInputs(['id' => $id]);
         $result = $native ? $this->getResults() : $this->getItems();
         return $result ? ($native ? $result->first() : $result[0]) : null;
     }
@@ -152,8 +152,8 @@ trait PublisherTrait
      */
     public function findBy($inputs = [], $native = true)
     {
-        $this->request->setMethod('GET');
-        $this->request->setInputs($inputs);
+        $this->getRequest()->setMethod('GET');
+        $this->getRequest()->setInputs($inputs);
         return $native ? $this->getResults() : $this->getItems();
     }
 
@@ -166,11 +166,11 @@ trait PublisherTrait
     public function store($inputs = null)
     {
         if ($inputs) {
-            $this->request->setMethod('POST');
-            $this->request->setInputs($inputs);
+            $this->getRequest()->setMethod('POST');
+            $this->getRequest()->setInputs($inputs);
         }
 
-        return $this->api->store();
+        return $this->getApi()->store();
     }
 
     /**
@@ -182,11 +182,11 @@ trait PublisherTrait
     public function update($inputs = null)
     {
         if ($inputs) {
-            $this->request->setMethod('POST');
-            $this->request->setInputs($inputs);
+            $this->getRequest()->setMethod('POST');
+            $this->getRequest()->setInputs($inputs);
         }
 
-        return $this->api->update();
+        return $this->getApi()->update();
     }
 
     /**
@@ -198,11 +198,11 @@ trait PublisherTrait
     public function delete($id = null)
     {
         if ($id) {
-            $this->request->setMethod('POST');
-            $this->request->setInputs(['id' => $id]);
+            $this->getRequest()->setMethod('POST');
+            $this->getRequest()->setInputs(['id' => $id]);
         }
 
-        return $this->api->delete();
+        return $this->getApi()->delete();
     }
 
     /*
@@ -224,12 +224,12 @@ trait PublisherTrait
      */
     public function action($inputs = null)
     {
-        $this->request->setMethod('GET');
+        $this->getRequest()->setMethod('GET');
         if ($inputs) {
-            $this->request->setInputs($inputs);
+            $this->getRequest()->setInputs($inputs);
         }
 
-        return $this->api->action();
+        return $this->getApi()->action();
     }
 
     /*
@@ -246,7 +246,7 @@ trait PublisherTrait
      */
     public function urlSelf()
     {
-        return $this->api->urlSelf();
+        return $this->getApi()->urlSelf();
     }
 
     /**
@@ -257,8 +257,20 @@ trait PublisherTrait
      */
     public function inputsAreValid($inputs = [])
     {
-        $validator = Validator::make($inputs, $this->request->rules());
+        $validator = Validator::make($inputs, $this->getRequest()->rules());
         return $validator->passes();
+    }
+
+    /**
+     * Get localized string via trans() or trans_choice() based on domain configuration.
+     *
+     * @param string $key
+     * @param null|array|int $option
+     * @return string
+     */
+    public function ls($key, $option = null)
+    {
+        return $this->getConfig()->ls($key, $option);
     }
     
 }

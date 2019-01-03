@@ -66,7 +66,7 @@ trait HasPublisherSession
      */
     public function goBack($message = '', $translation_option = null)
     {
-        return redirect($this->getBackTo())->with('message', $this->config->ls($message, $translation_option));
+        return redirect($this->getBackTo())->with('message', $this->getConfig()->ls($message, $translation_option));
     }
 
     /**
@@ -84,7 +84,7 @@ trait HasPublisherSession
      */
     public function setRoot()
     {
-        Session::put('root', $this->currentRouteUrlRoot($this->config->absoluteUrls()));
+        Session::put('root', $this->currentRouteUrlRoot($this->getConfig()->getAbsoluteUrls()));
     }
 
     /**
@@ -96,7 +96,7 @@ trait HasPublisherSession
      */
     public function goToRoot($message = '', $translation_option = null)
     {
-        return redirect($this->getRoot())->with('message', $this->config->ls($message, $translation_option));
+        return redirect($this->getRoot())->with('message', $this->getConfig()->ls($message, $translation_option));
     }
 
     /**

@@ -3,51 +3,28 @@
 namespace Viewflex\Ligero\Publishers;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Viewflex\Ligero\Base\BasePublisherConfig as DefaultConfig;
-use Viewflex\Ligero\Base\BasePublisherRequest as DefaultRequest;
-use Viewflex\Ligero\Base\BasePublisherRepository as DefaultQuery;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
 use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
 use Viewflex\Ligero\Contracts\PublisherInterface;
 
 /**
- * This trait supports the creation and use of a Publisher object within
- * controllers, contexts, or other classes, adding new class attributes
- * for the Publisher, and it's Config, Request, and Query components.
- * Additional Publishers can be created as needed via newPublisher().
+ * Supports instantiation, fluent configuration, and use of
+ * a Publisher in controllers, contexts, or other classes.
  */
 trait HasPublisher
 {
+    
+    use HasFluentConfiguration;
+    
     /*
     |--------------------------------------------------------------------------
     | The Publisher and it's Components
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * The default config for this controller.
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * The default request for this controller.
-     *
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * The default repository of methods used internally to perform database queries.
-     *
-     * @var Query
-     */
-    protected $query;
     
     /**
-     * The default publisher for this controller.
+     * The default publisher for this class.
      *
      * @var PublisherInterface
      */
@@ -60,18 +37,7 @@ trait HasPublisher
      */
     public function getConfig()
     {
-        return $this->config;
-    }
-
-    /**
-     * Set the default config fluently.
-     * 
-     * @param Config $config
-     * @return Config
-     */
-    public function setConfig($config)
-    {
-        return $this->config = $config;
+        return $this->publisher->getConfig();
     }
 
     /**
@@ -81,18 +47,7 @@ trait HasPublisher
      */
     public function getRequest()
     {
-        return $this->request;
-    }
-
-    /**
-     * Set the default request fluently.
-     * 
-     * @param Request $request
-     * @return Request
-     */
-    public function setRequest($request)
-    {
-        return $this->request = $request;
+        return $this->publisher->getRequest();
     }
 
     /**
@@ -102,18 +57,7 @@ trait HasPublisher
      */
     public function getQuery()
     {
-        return $this->query;
-    }
-
-    /**
-     * Set the default query fluently.
-     *
-     * @param Query $query
-     * @return Query
-     */
-    public function setQuery($query)
-    {
-        return $this->query = $query;
+        return $this->publisher->getQuery();
     }
     
     /**
@@ -144,26 +88,7 @@ trait HasPublisher
     */
 
     /**
-     * Inject Publisher to initialize for this controller.
-     *
-     * @param PublisherInterface $publisher
-     */
-    public function initPublisher(PublisherInterface $publisher)
-    {
-        $this->setPublisher($publisher);
-        $this->setConfig($publisher->getConfig());
-        $this->setRequest($publisher->getRequest());
-        $this->setQuery($publisher->getQuery());
-    }
-    
-    /**
-     * Inject config, request, and repository to create
-     * new PublisherApi and it's decorating Publisher.
-     *
-     * Extend this method in controller to set values
-     * specific to the domain we're publishing, ie:
-     * $this->config->setTranslationNamespace('abc'),
-     * before passing the config to Api constructor.
+     * Initialize and return a new publisher with config, request, and (optionally) repository .
      *
      * @param Config $config
      * @param Request $request
@@ -172,31 +97,17 @@ trait HasPublisher
      */
     public function createPublisher(Config $config, Request $request, Query $query = null)
     {
-        return $this->setPublisher(
-            $this->newPublisher($this->setConfig($config), $this->setRequest($request), $this->setQuery($query))
-        );
+        return $this->setPublisher(new Publisher($config, $request, $query));
     }
 
     /**
-     * Use package defaults to create a new publisher.
-     * Can customize via setters afterward if needed.
+     * Initialize and return a new publisher with default components.
      * 
      * @return PublisherInterface
      */
     public function createPublisherWithDefaults()
     {
-        return $this->createPublisher(new DefaultConfig, new DefaultRequest, new DefaultQuery);
-    }
-
-    /**
-     * @param Config $config
-     * @param Request $request
-     * @param Query|null $query
-     * @return Publisher
-     */
-    public function newPublisher(Config $config, Request $request, Query $query = null)
-    {
-        return new Publisher($config, $request, $query);
+        return $this->setPublisher(new Publisher());
     }
     
     /*
@@ -214,17 +125,19 @@ trait HasPublisher
      */
     public function returnView($view, $data)
     {
-        return view($this->config->getDomainViewName($view), $data);
+        return view($this->getConfig()->getDomainViewName($view), $data);
     }
 
     /**
-     * Replace original inputs with new array provided.
+     * Get localized string via trans() or trans_choice() based on domain configuration.
      *
-     * @param array $inputs
+     * @param string $key
+     * @param null|array|int $option
+     * @return string
      */
-    public function setInputs($inputs = [])
+    public function ls($key, $option = null)
     {
-        $this->request->setInputs($inputs);
+        return $this->getConfig()->ls($key, $option);
     }
 
     /**
@@ -237,7 +150,7 @@ trait HasPublisher
      */
     protected function initializeRequest(SymfonyRequest $current)
     {
-        $this->request->initializeRequest($current);
+        $this->getRequest()->initializeRequest($current);
     }
     
 }

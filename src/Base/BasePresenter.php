@@ -71,7 +71,7 @@ class BasePresenter extends Presenter
             $data['price'] = $this->price();
             $data['price_round'] = $this->priceRound();
 
-            if ($this->config->unitConversions()) {
+            if ($this->config->getUnitConversions()) {
                 $data['alt_length'] = $this->altLength();
                 $data['alt_width'] = $this->altWidth();
                 $data['alt_depth'] = $this->altDepth();

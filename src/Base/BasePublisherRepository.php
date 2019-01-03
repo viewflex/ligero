@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Viewflex\Ligero\Contracts\PublisherRepositoryInterface;
 use Viewflex\Ligero\Contracts\PublisherApiInterface as Api;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
+use Viewflex\Ligero\Contracts\PublisherRepositoryInterface;
 use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Exceptions\PublisherRepositoryException;
 use Viewflex\Ligero\Utility\ArrayHelperTrait;
@@ -23,40 +23,61 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     use ArrayHelperTrait, ModelLoaderTrait;
 
     /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
      * @var Api
      */
     protected $api;
+
+    /**
+     * @return Api
+     */
+    public function getApi()
+    {
+        return $this->api;
+    }
+    /**
+     * @param Api $api
+     */
+    public function setApi($api)
+    {
+        $this->api = $api;
+        $this->loadModel();
+    }
 
     /**
      * @var Model
      */
     protected $model;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Initialization
-    |--------------------------------------------------------------------------
-    */
+    /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
 
     /**
-     * @param Api $api
+     * @param Model $model
      */
-    public function setApi(Api $api)
+    public function setModel($model)
     {
-        $this->api = $api;
-        $this->config = $this->api->getConfig();
-        $this->request = $this->api->getRequest();
-        $this->loadModel();
+        $this->model = $model;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->getApi()->getConfig();
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->getApi()->getRequest();
     }
 
     /*
@@ -72,7 +93,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     public function found()
     {
-        $builder = $this->model->select($this->mapColumn('id'));
+        $builder = $this->getModel()->select($this->mapColumn('id'));
         $builder = $this->queryCriteria($builder);
 
         $found = function($builder) {
@@ -146,14 +167,14 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     {
         $builder->where(function($query) {
 
-            $params = $this->api->getQueryParameters();
+            $params = $this->getApi()->getQueryParameters();
             $params = $this->formatDateTimeInputs($params);
             
             if (array_key_exists('id', $params))
                 $query->where($this->mapColumn('id'), '=', $params['id']);
 
-            $others = array_except($this->api->dbQueryParameters($params), ['id']);
-            $wildcards = $this->config->getWildcardColumns();
+            $others = array_except($this->getApi()->dbQueryParameters($params), ['id']);
+            $wildcards = $this->getConfig()->getWildcardColumns();
 
             foreach($others as $column => $value)
             {
@@ -168,8 +189,8 @@ class BasePublisherRepository implements PublisherRepositoryInterface
             if (array_key_exists('keyword', $params)) {
 
                 $query->where(function($keyword_query) {
-                    $keyword = $this->api->getQueryParameters()['keyword'];
-                    foreach ($this->config->getKeywordSearchConfig()['columns'] as $column) {
+                    $keyword = $this->getApi()->getQueryParameters()['keyword'];
+                    foreach ($this->getConfig()->getKeywordSearchConfig()['columns'] as $column) {
                         $keyword_query->orWhere($this->mapColumn($column), 'LIKE', ('%'.$keyword.'%'));
                     }
                 });
@@ -188,10 +209,10 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function queryPagination(Builder $builder)
     {
-        $builder->getQuery()->offset($this->api->getQueryStart());
-        $builder->getQuery()->limit($this->api->getQueryLimit());
+        $builder->getQuery()->offset($this->getApi()->getQueryStart());
+        $builder->getQuery()->limit($this->getApi()->getQueryLimit());
 
-        $sort = $this->api->getQuerySort();
+        $sort = $this->getApi()->getQuerySort();
         foreach ($sort as $field => $direction) {
             $builder->getQuery()->orderBy($this->mapColumn($field), $direction);
         }
@@ -207,7 +228,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function publisherQuery()
     {
-        $builder = $this->mapSelect($this->config->getResultsColumns($this->api->getQueryView()));
+        $builder = $this->mapSelect($this->getConfig()->getResultsColumns($this->getApi()->getQueryView()));
         $builder = $this->queryCriteria($builder);
         $builder = $this->queryPagination($builder);
         return $builder;
@@ -221,7 +242,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function whereItems(Builder $builder)
     {
-        $params = $this->api->getQueryParameters();
+        $params = $this->getApi()->getQueryParameters();
         if (array_key_exists('items', $params)) {
 
             foreach ($params['items'] as $id)
@@ -239,7 +260,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function cacheKey($builder)
     {
-        return md5($this->api->getRoute().$builder->toSql().serialize($builder->getBindings()));
+        return md5($this->getApi()->getRoute().$builder->toSql().serialize($builder->getBindings()));
     }
 
     /**
@@ -253,7 +274,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function cacheQuery($function, $builder)
     {
-        $cache = $this->config->getCaching();
+        $cache = $this->getConfig()->getCaching();
 
         if($cache['active']) {
             $key = $this->cacheKey($builder->getQuery());
@@ -292,13 +313,13 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     public function store()
     {
-        $params = $this->api->dbQueryParameters($this->api->getRequestParameters());
+        $params = $this->getApi()->dbQueryParameters($this->getApi()->getRequestParameters());
         
         if (!$params)
             throw new PublisherRepositoryException('No attributes specified for creating new item.');
 
         // Set created_at column if it exists (and if not already in params).
-        if ((array_key_exists('created_at', $columns = $this->request->getPostRules())) && (! array_key_exists('created_at', $params) ))
+        if ((array_key_exists('created_at', $columns = $this->getRequest()->getRequestRules())) && (! array_key_exists('created_at', $params) ))
             $params['created_at'] = Carbon::now()->toDateTimeString();
 
         // Set updated_at column if it exists (and if not already in params).
@@ -312,7 +333,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
         $params = $this->formatDateTimeInputs($params);
         $this->logQuery('store(): '.$this->arrayToString($params));
 
-        $id = DB::table($this->config->getTableName())->insertGetId($this->mapAttributes(array_except($params, 'id')));
+        $id = DB::table($this->getConfig()->getTableName())->insertGetId($this->mapAttributes(array_except($params, 'id')));
 
         if (!$id)
             throw new PublisherRepositoryException('Item could not be created.');
@@ -328,7 +349,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     public function update()
     {
-        $params = $this->api->dbQueryParameters($this->api->getRequestParameters());
+        $params = $this->getApi()->dbQueryParameters($this->getApi()->getRequestParameters());
 
         if (!$params)
             throw new PublisherRepositoryException('No attributes specified for updating item.');
@@ -337,13 +358,13 @@ class BasePublisherRepository implements PublisherRepositoryInterface
             throw new PublisherRepositoryException('No valid id was specified for updating item.');
 
         // Set updated_at column if it exists (and if not already in params).
-        if ((array_key_exists('updated_at', $this->request->getPostRules())) && (! array_key_exists('updated_at', $params) ))
+        if ((array_key_exists('updated_at', $this->getRequest()->getRequestRules())) && (! array_key_exists('updated_at', $params) ))
             $params['updated_at'] = Carbon::now()->toDateTimeString();
 
         $params = $this->formatDateTimeInputs($params);
         $this->logQuery('update(): '.$this->arrayToString($params));
 
-        $affected_rows = DB::table($this->config->getTableName())->where($this->mapColumn('id'), $params['id'])->update($params);
+        $affected_rows = DB::table($this->getConfig()->getTableName())->where($this->mapColumn('id'), $params['id'])->update($params);
         
         if ($affected_rows)
             Cache::flush();
@@ -362,26 +383,26 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     public function delete()
     {
-        $params = $this->api->dbQueryParameters($this->api->getRequestParameters());
+        $params = $this->getApi()->dbQueryParameters($this->getApi()->getRequestParameters());
         
         if ((!array_key_exists('id', $params)) || (intval($params['id'] < 1)))
             throw new PublisherRepositoryException('No valid id was specified for deleting item.');
 
         // See if we need to soft-delete.
-        if (array_key_exists('deleted_at', $columns = $this->request->getPostRules())) {
+        if (array_key_exists('deleted_at', $columns = $this->getRequest()->getRequestRules())) {
 
             $now = Carbon::now()->toDateTimeString();
             $inputs['deleted_at'] = $now;
 
             // Set updated_at column if it exists (and if not already in params).
-            if ((array_key_exists('updated_at', $this->request->getPostRules())) && (! array_key_exists('updated_at', $params) ))
+            if ((array_key_exists('updated_at', $this->getRequest()->getRequestRules())) && (! array_key_exists('updated_at', $params) ))
                 $params['updated_at'] = $now;
 
             $this->logQuery('delete(): '.$params['id'].' (soft-delete)');
-            $affected_rows = DB::table($this->config->getTableName())->where($this->mapColumn('id'), $params['id'])->update($inputs);
+            $affected_rows = DB::table($this->getConfig()->getTableName())->where($this->mapColumn('id'), $params['id'])->update($inputs);
         } else {
             $this->logQuery('delete(): '.$params['id']);
-            $affected_rows = DB::table($this->config->getTableName())->where($this->mapColumn('id'), $params['id'])->delete();
+            $affected_rows = DB::table($this->getConfig()->getTableName())->where($this->mapColumn('id'), $params['id'])->delete();
         }
 
         if (!$affected_rows)
@@ -404,7 +425,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     public function action()
     {
-        $params = $this->api->getQueryParameters();
+        $params = $this->getApi()->getQueryParameters();
         
         if (!$params)
             throw new PublisherRepositoryException('No attributes specified for action.');
@@ -422,13 +443,13 @@ class BasePublisherRepository implements PublisherRepositoryInterface
             $action_options = $params['options'];
         
         $affected_rows = 0;
-
+        
         if (($action !== '') && ($action !== 'select_all') && count($action_items)) {
 
             $this->logQuery('action(): '.$action.', items: '.$this->arrayToString($action_items));
 
             // Create builder object with query criteria.
-            $builder = $this->whereItems($this->mapSelect($this->config->getResultsColumns()));
+            $builder = $this->whereItems($this->mapSelect($this->getConfig()->getResultsColumns()));
 
             // Execute specified action on selected items.
             switch ($action) {
@@ -450,6 +471,8 @@ class BasePublisherRepository implements PublisherRepositoryInterface
             if (!$affected_rows) {
                 throw new PublisherRepositoryException('List action could not be performed.');
             }
+
+            Cache::flush();
 
         }
 
@@ -554,8 +577,8 @@ class BasePublisherRepository implements PublisherRepositoryInterface
      */
     protected function logQuery($message = '')
     {
-        if($this->config->getLogging()['active']) {
-            Log::info($this->config->getDomain().': '.$message);
+        if($this->getConfig()->getLogging()['active']) {
+            Log::info($this->getConfig()->getDomain().': '.$message);
         }
     }
 

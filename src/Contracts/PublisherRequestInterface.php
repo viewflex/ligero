@@ -13,6 +13,8 @@ interface PublisherRequestInterface
     */
     
     /**
+     * Get query or request rules, based on http request method.
+     * 
      * By returning a non-empty array here, we trigger
      * validation when using the Laravel FormRequest,
      * before the controller loads. Note: As of L5.4,
@@ -23,48 +25,48 @@ interface PublisherRequestInterface
     public function rules();
 
     /**
-     * Get request's rules array.
-     * 
+     * Get custom and reserved query rules.
+     *
      * @return array
      */
-    public function getRules();
+    public function getQueryRules();
 
     /**
-     * Set request's rules array.
-     * 
-     * @param array $rules
+     * Set custom query rules, maintaining reserved rules.
+     *
+     * @param array $query_rules
      */
-    public function setRules($rules);
+    public function setQueryRules($query_rules);
 
     /**
-     * Set a specific rule.
-     * 
+     * Set a specific query rule.
+     *
      * @param string $name
      * @param string $value
      */
-    public function setRule($name, $value);
-        
+    public function setQueryRule($name, $value);
+
     /**
-     * Get custom rules array for POST/PUT/PATCH/DELETE requests.
-     * 
+     * Get custom and reserved request rules.
+     *
      * @return array
      */
-    public function getPostRules();
+    public function getRequestRules();
 
     /**
-     * Set custom rules array for POST/PUT/PATCH/DELETE requests.
-     * 
-     * @param array $post_rules
+     * Set custom request rules, maintaining reserved rules.
+     *
+     * @param array $request_rules
      */
-    public function setPostRules($post_rules);
+    public function setRequestRules($request_rules);
 
     /**
-     * Set a specific rule for POST/PUT/PATCH/DELETE requests.
-     * 
+     * Set a specific request rule.
+     *
      * @param string $name
      * @param string $value
      */
-    public function setPostRule($name, $value);
+    public function setRequestRule($name, $value);
 
     /*
     |--------------------------------------------------------------------------

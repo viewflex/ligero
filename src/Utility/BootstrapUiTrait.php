@@ -14,7 +14,7 @@ trait BootstrapUiTrait
      */
     public function keywordSearch()
     {
-        $keyword_search = $this->publisher->getKeywordSearch();
+        $keyword_search = $this->getPublisher()->getKeywordSearch();
         
         $ks['scope'] = $keyword_search['config']['scope'];
         $ks['persist_sort'] = $keyword_search['config']['persist_sort'];
@@ -47,19 +47,19 @@ trait BootstrapUiTrait
      */
     public function pager()
     {
-        $pager = $this->publisher->getPagination()['pager'];
+        $pager = $this->getPublisher()->getPagination()['pager'];
         $html = "\n<nav>\n    <ul class=\"pager\">";
 
         $html .= "\n        <li class=\"previous".
             ($pager['pages']['prev'] !== null ? '' : ' disabled').
             "\"><a href=\"".($pager['pages']['prev'] ? : '#').
             "\"><span aria-hidden=\"true\">&larr;</span> ".
-            $this->config->ls('ui.nav.previous')."</a></li>";
+            $this->getConfig()->ls('ui.nav.previous')."</a></li>";
 
         $html .= "\n        <li class=\"next".
             ($pager['pages']['next'] !== null ? '' : ' disabled').
             "\"><a href=\"".($pager['pages']['next'] ? : '#').
-            "\">".$this->config->ls('ui.nav.next').
+            "\">".$this->getConfig()->ls('ui.nav.next').
             " <span aria-hidden=\"true\">&rarr;</span></a></li>";
 
         $html .= "\n    </ul>\n</nav>\n\n";
@@ -75,17 +75,17 @@ trait BootstrapUiTrait
      */
     public function pageNav()
     {
-        $pager = $this->publisher->getPagination()['pager'];
+        $pager = $this->getPublisher()->getPagination()['pager'];
         $html = "\n<nav>\n    <ul class=\"pagination\">";
 
         if ($pager['pages']['prev']) {
             $html .= "\n        <li><a href=\"".$pager['pages']['prev'].
-                "\" aria-label=\"".$this->config->ls('ui.nav.previous').
+                "\" aria-label=\"".$this->getConfig()->ls('ui.nav.previous').
                 "\"><span aria-hidden=\"true\">&laquo;</span></a><li>";
         } else
             $html .= "\n        <li class=\"disabled\"><span><span aria-hidden=\"true\">&laquo;</span></span></li>";
 
-        $pages = $this->publisher->getPagination()['page_menu']['pages'];
+        $pages = $this->getPublisher()->getPagination()['page_menu']['pages'];
         foreach($pages as $page_num => $data) {
             if ($data['url']) // not the current page
                 $html .= "\n        <li><a href=\"".$data['url']."\">".$page_num."</a></li>";
@@ -95,7 +95,7 @@ trait BootstrapUiTrait
 
         if ($pager['pages']['next']) {
             $html .= "\n        <li><a href=\"".$pager['pages']['next'].
-                "\" aria-label=\"".$this->config->ls('ui.nav.next').
+                "\" aria-label=\"".$this->getConfig()->ls('ui.nav.next').
                 "\"><span aria-hidden=\"true\">&raquo;</span></a><li>";
         } else
             $html .= "\n        <li class=\"disabled\"><span><span aria-hidden=\"true\">&raquo;</span></span></li>";
@@ -112,7 +112,7 @@ trait BootstrapUiTrait
      */
     public function viewMenu()
     {
-        $data = $this->publisher->getPagination()['view_menu'];
+        $data = $this->getPublisher()->getPagination()['view_menu'];
         $button_label = $data['label_view_as'].' '.$data['views'][$data['selected']]['display'];
 
         $html = "\n    <li class=\"dropdown\">";

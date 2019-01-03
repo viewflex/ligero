@@ -56,7 +56,7 @@
                                 <td>{!! $item['name'] !!}</td>
                                 <td>{!! $item['category'] !!}</td>
                                 <td>{!! $item['subcategory'] !!}</td>
-                                <td>{!! $item['price'] !!} / {!! $item['alt_price'] !!}</td>
+                                <td>{!! $item['price'] !!} @if ($item['alt_price'])/ {!! $item['alt_price'] !!}@endif</td>
                                 <td>
                                     <div class="btn-group btn-group-xs" role="group" aria-label="Edit">
                                         <a href="{{ ($path.'/'.strtolower($domain).'/'.$item['id'].'/edit') }}" role="button"  class="btn btn-default btn-xs">{!! trans($trans_prefix.'ui.label.edit') !!}</a>
@@ -94,7 +94,7 @@
                                                 <div class="panel-body">
 
                                                     <h6>{!! $item['name'] !!}</h6>
-                                                    <small>{!! $item['price'] !!} / {!! $item['alt_price'] !!}</small>
+                                                    <small>{!! $item['price'] !!} @if ($item['alt_price'])/ {!! $item['alt_price'] !!}@endif</small>
 
                                                 </div>
                                             </div>
@@ -148,7 +148,7 @@
 
                                                 <tr>
                                                     <td>{!! trans($trans_prefix.'ui.price') !!}</td>
-                                                    <td>{!! $item['price'] !!} / {!! $item['alt_price'] !!}</td>
+                                                    <td>{!! $item['price'] !!} @if ($item['alt_price'])/ {!! $item['alt_price'] !!}@endif</td>
                                                 </tr>
 
                                             </tbody>

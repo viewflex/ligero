@@ -15,17 +15,16 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     */
 
     /**
-     * The complete list of valid query parameter names,
-     * along with their respective validation rules.
+     * Standard query parameters and their rules.
      *
      * @var array
      */
-    protected $rules = [
+    private $reserved_query_rules = [
         'id'            => 'numeric|min:1',
         'keyword'       => 'max:32',
         'sort'          => 'max:32',
         'view'          => 'in:list,grid,item',
-        'limit'         => 'numeric|max:100',
+        'limit'         => 'numeric|min:1',
         'start'         => 'numeric|min:0',
         'action'        => 'max:32',
         'items'         => 'array',
@@ -34,16 +33,34 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     ];
 
     /**
-     * The complete list of valid POST parameter names,
-     * along with their respective validation rules.
+     * Standard request parameters and their rules.
      *
      * @var array
      */
-    protected $post_rules = [
-        'id'            => 'numeric|min:1'
+    private $reserved_request_rules = [
+        'id'            => 'numeric|min:1',
+        'action'        => 'max:32',
+        'items'         => 'array',
+        'options'       => 'array'
     ];
 
     /**
+     * Standard and custom query rules.
+     *
+     * @var array
+     */
+    protected $query_rules = [];
+
+    /**
+     * Standard and custom request rules.
+     *
+     * @var array
+     */
+    protected $request_rules = [];
+
+    /**
+     * Get query or request rules, based on http request method.
+     * 
      * @return array
      */
     public function rules()
@@ -52,27 +69,27 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
         {
             case 'GET':
             {
-                return $this->rules;
+                return $this->getQueryRules();
                 break;
             }
             case 'POST':
             {
-                return $this->post_rules;
+                return $this->getRequestRules();
                 break;
             }
             case 'PUT':
             {
-                return $this->post_rules;
+                return $this->getRequestRules();
                 break;
             }
             case 'PATCH':
             {
-                return $this->post_rules;
+                return $this->getRequestRules();
                 break;
             }
             case 'DELETE':
             {
-                return $this->post_rules;
+                return $this->getRequestRules();
                 break;
             }
             default:break;
@@ -80,53 +97,129 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     }
 
     /**
+     * Get custom and reserved query rules.
+     * 
+     * @return array
+     */
+    public function getQueryRules()
+    {
+        return $this->query_rules = array_merge($this->query_rules, $this->reserved_query_rules);;
+    }
+
+    /**
+     * Set custom query rules, maintaining reserved rules.
+     * 
+     * @param array $query_rules
+     */
+    public function setQueryRules($query_rules)
+    {
+        $this->query_rules = array_merge($query_rules, $this->reserved_query_rules);
+    }
+
+    /**
+     * Set a specific query rule.
+     * 
+     * @param string $name
+     * @param string $value
+     */
+    public function setQueryRule($name, $value)
+    {
+        $this->query_rules[$name] = $value;
+    }
+    
+    /**
+     * Alias for getQueryRules().
+     * 
      * @return array
      */
     public function getRules()
     {
-        return $this->rules;
+        return $this->getQueryRules();
     }
 
     /**
-     * @param array $rules
+     * Alias for setQueryRules().
+     * 
+     * @param array $query_rules
      */
-    public function setRules($rules)
+    public function setRules($query_rules)
     {
-        $this->rules = $rules;
+        $this->setQueryRules($query_rules);
     }
 
     /**
+     * Alias for setQueryRule().
+     * 
      * @param string $name
      * @param string $value
      */
     public function setRule($name, $value)
     {
-        $this->rules[$name] = $value;
+        $this->setQueryRule($name, $value);
     }
-    
+
     /**
+     * Get custom and reserved request rules.
+     * 
+     * @return array
+     */
+    public function getRequestRules()
+    {
+        return $this->request_rules = array_merge($this->request_rules, $this->reserved_request_rules);
+    }
+
+    /**
+     * Set custom request rules, maintaining reserved rules.
+     * 
+     * @param array $request_rules
+     */
+    public function setRequestRules($request_rules)
+    {
+        $this->request_rules = array_merge($request_rules, $this->reserved_request_rules);
+    }
+
+    /**
+     * Set a specific request rule.
+     * 
+     * @param string $name
+     * @param string $value
+     */
+    public function setRequestRule($name, $value)
+    {
+        $this->request_rules[$name] = $value;
+    }
+
+    // Aliases for backward compatibility
+
+    /**
+     * Alias for getRequestRules().
+     * 
      * @return array
      */
     public function getPostRules()
     {
-        return $this->post_rules;
+        return $this->getRequestRules();
     }
 
     /**
-     * @param array $post_rules
+     * Alias for setRequestRules().
+     * 
+     * @param array $request_rules
      */
-    public function setPostRules($post_rules)
+    public function setPostRules($request_rules)
     {
-        $this->post_rules = $post_rules;
+        $this->setRequestRules($request_rules);
     }
 
     /**
+     * Alias for setRequestRule().
+     * 
      * @param string $name
      * @param string $value
      */
     public function setPostRule($name, $value)
     {
-        $this->post_rules[$name] = $value;
+        $this->setRequestRule($name, $value);
     }
 
     /*
@@ -141,7 +234,7 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     public function getQueryInputs()
     {
         $clean_params = array();
-        $names = array_keys($this->rules);
+        $names = array_keys($this->getQueryRules());
         $inputs = array_only($this->all(), $names);
 
         foreach($inputs as $key => $value) {

@@ -3,9 +3,6 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsConfig as Config;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRequest as Request;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsRepository as Query;
 use Viewflex\Ligero\Publishers\HasPublisher;
 
 class LigeroFunctionalTest extends TestCase
@@ -16,8 +13,8 @@ class LigeroFunctionalTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->createPublisher(new Config, new Request, new Query);
+        $this->createPublisherWithDefaults();
+        include('ConfiguresItems.php');
         LigeroTestData::create(['ligero_items' => 'ligero_items']);
     }
 
@@ -44,19 +41,18 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Save the record, getting it's id.
-        $this->request->setInputs($inputs);
+        $this->setInputs($inputs);
         $id = $this->publisher->store();
         $this->assertGreaterThan(0, $id);
 
         // Search by id, should find exactly one record.
-        $this->request->setInputs(['id' => $id]);
+        $this->setInputs(['id' => $id]);
         $this->assertEquals(1, $this->publisher->found());
 
         // See if the new record conforms to input.
         $item = $this->publisher->getItems()[0];
         $this->assertEquals($inputs, array_except($item, 'id'));
     }
-
 
     public function test_publisher_update()
     {
@@ -70,12 +66,12 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Save the record, getting it's id.
-        $this->request->setInputs($inputs);
+        $this->setInputs($inputs);
         $id = $this->publisher->store();
         $this->assertGreaterThan(0, $id);
 
         // Search by id, should find exactly one record.
-        $this->request->setInputs(['id' => $id]);
+        $this->setInputs(['id' => $id]);
         $this->assertEquals(1, $this->publisher->found());
 
         $new_inputs = [
@@ -89,26 +85,49 @@ class LigeroFunctionalTest extends TestCase
         ];
 
         // Modify the existing record, getting number of rows affected (should be 1).
-        $this->request->setInputs($new_inputs);
+        $this->setInputs($new_inputs);
         $affected = $this->publisher->update();
         $this->assertEquals(1, $affected);
         
         // See if the modified record conforms to new input.
-        $this->request->setInputs(['id' => $id]);
+        $this->setInputs(['id' => $id]);
         $item = $this->publisher->getItems()[0];
         $this->assertEquals($new_inputs, $item);
     }
 
-
     public function test_publisher_delete()
     {
         // Delete an existing record, getting number of rows affected (should be 1).
-        $this->request->setInputs(['id' => 2]);
+        $this->setInputs(['id' => 2]);
         $affected = $this->publisher->delete();
         $this->assertEquals(1, $affected);
 
-        // See if the record can still be found.
+        // See if the record was deleted.
         $this->assertEquals(0, $this->publisher->find(2));
+    }
+
+    public function test_publisher_action_clone()
+    {
+        // Clone an existing record, getting number of rows affected (should be 2).
+        $this->setInputs(['action' => 'clone', 'items' => array(2, 3)]);
+        $affected = $this->publisher->action();
+        $this->assertEquals(2, $affected);
+
+        // See if the new records can be found.
+        $this->assertEquals('North Face Fleece Pullover', $this->publisher->find(11, false)['name']);
+        $this->assertEquals('Timberland Hiker Boots', $this->publisher->find(12, false)['name']);
+    }
+
+    public function test_publisher_action_delete()
+    {
+        // Delete an existing record, getting number of rows affected (should be 2).
+        $this->setInputs(['action' => 'delete', 'items' => array(2, 3)]);
+        $affected = $this->publisher->action();
+        $this->assertEquals(2, $affected);
+
+        // See if the records were deleted.
+        $this->assertEquals(0, $this->publisher->find(2));
+        $this->assertEquals(0, $this->publisher->find(3));
     }
 
 }

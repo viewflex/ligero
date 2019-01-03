@@ -15,7 +15,7 @@ trait ModelLoaderTrait
      */
     public function modelName()
     {
-        return $this->config->getModelName() ? : 'Viewflex\Ligero\Base\BaseModel';
+        return $this->getConfig()->getModelName() ? : 'Viewflex\Ligero\Base\BaseModel';
     }
 
     /**
@@ -35,9 +35,9 @@ trait ModelLoaderTrait
     public function loadModel()
     {
         $model_name = $this->modelName();
-        $this->model = new $model_name;
-        if ($this->config->getTableName())
-            $this->model->setTable($this->config->getTableName());
+        $this->setModel(new $model_name);
+        if ($this->getConfig()->getTableName())
+            $this->getModel()->setTable($this->getConfig()->getTableName());
     }
 
 }
