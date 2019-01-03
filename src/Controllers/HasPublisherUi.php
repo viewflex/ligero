@@ -26,7 +26,7 @@ trait HasPublisherUi
         // Keep last index() query 'back_to' url and 'root' uri.
         $this->remember();
 
-        $validator = Validator::make($this->request->getQueryInputs(), $this->request->getRules());
+        $validator = Validator::make($this->getRequest()->getQueryInputs(), $this->getRequest()->getQueryRules());
         $validator->validate();
 
         // Return view if we have results, otherwise redirect back.
@@ -72,7 +72,7 @@ trait HasPublisherUi
     {
         $this->remember();
 
-        $validator = Validator::make($this->request->getQueryInputs(), $this->request->getRules());
+        $validator = Validator::make($this->getRequest()->getQueryInputs(), $this->getRequest()->getQueryRules());
 
         if ($validator->fails())
             return null;
@@ -95,11 +95,11 @@ trait HasPublisherUi
     public function composeListing()
     {
         return [
-            'info' => $this->config->ls('ui.results.viewing')
+            'info' => $this->getConfig()->ls('ui.results.viewing')
                 .' '.$this->publisher->getPagination()['viewing']['first']
-                .$this->config->ls('ui.symbol.range').$this->publisher->getPagination()['viewing']['last']
-                .' '.$this->config->ls('ui.results.of').' '.$this->publisher->found()
-                .' '.$this->config->ls('ui.results.records', $this->publisher->found()),
+                .$this->getConfig()->ls('ui.symbol.range').$this->publisher->getPagination()['viewing']['last']
+                .' '.$this->getConfig()->ls('ui.results.of').' '.$this->publisher->found()
+                .' '.$this->getConfig()->ls('ui.results.records', $this->publisher->found()),
             'page_menu' => $this->pageNav(),
             'query_dropdowns' => '',
             'keyword_search' => $this->keywordSearch(),
@@ -107,10 +107,10 @@ trait HasPublisherUi
             'items' => $this->publisher->presentItems(),
             'message' => $this->getMessage(),
             'path' => $this->currentRouteUrlDir(),
-            'domain' => $this->config->getDomain(),
-            'trans_prefix' => $this->config->getTranslationPrefix(),
-            'namespace' => $this->config->getResourceNamespace(),
-            'view_prefix' => $this->config->getDomainViewPrefix(),
+            'domain' => $this->getConfig()->getDomain(),
+            'trans_prefix' => $this->getConfig()->getTranslationPrefix(),
+            'namespace' => $this->getConfig()->getResourceNamespace(),
+            'view_prefix' => $this->getConfig()->getDomainViewPrefix(),
             'title' => 'Search Results',
             'query_info' => $this->publisher->getQueryInfo()
         ];
@@ -132,10 +132,10 @@ trait HasPublisherUi
             'item' => null,
             'message' => $this->getMessage(),
             'path' => $this->currentRouteUrlDir(),
-            'domain' => $this->config->getDomain(),
-            'trans_prefix' => $this->config->getTranslationPrefix(),
-            'namespace' => $this->config->getResourceNamespace(),
-            'view_prefix' => $this->config->getDomainViewPrefix(),
+            'domain' => $this->getConfig()->getDomain(),
+            'trans_prefix' => $this->getConfig()->getTranslationPrefix(),
+            'namespace' => $this->getConfig()->getResourceNamespace(),
+            'view_prefix' => $this->getConfig()->getDomainViewPrefix(),
             'read_only' => false,
             'back_to' => $this->getBackTo(),
             'query_info' => null,
@@ -148,21 +148,21 @@ trait HasPublisherUi
                 $data['query'] = $this->publisher->getQueryInfo();
                 $data['item'] = $this->publisher->getItems()[0];
                 $data['form_action'] = 'show';
-                $action_message = $this->config->ls('ui.title.view_domain_record', ['domain' => $this->config->getDomain()])
-                    .' #'.$this->request->getQueryInput('id');
+                $action_message = $this->getConfig()->ls('ui.title.view_domain_record', ['domain' => $this->getConfig()->getDomain()])
+                    .' #'.$this->getRequest()->getQueryInput('id');
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
                 $data['read_only'] = true;
                 break;
 
             case 'create': // Route: (GET) {uri}/create - show new item form, use inputs if provided.
-                $data['item'] = $this->request->except('id');
+                $data['item'] = $this->getRequest()->except('id');
 
                 // Use {uri}/store as form action uri.
                 $form_action = $this->currentRouteUrlDir().'/store';
 
                 $data['form_action'] = $form_action;
-                $action_message = $this->config->ls('ui.title.new_domain_record', ['domain' => $this->config->getDomain()]);
+                $action_message = $this->getConfig()->ls('ui.title.new_domain_record', ['domain' => $this->getConfig()->getDomain()]);
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
                 break;
@@ -175,8 +175,8 @@ trait HasPublisherUi
                 $form_action = $this->currentRouteUrlDir();
 
                 $data['form_action'] = $form_action;
-                $action_message = $this->config->ls('ui.title.update_domain_record', ['domain' => $this->config->getDomain()])
-                    .' #'.$this->request->getQueryInput('id');
+                $action_message = $this->getConfig()->ls('ui.title.update_domain_record', ['domain' => $this->getConfig()->getDomain()])
+                    .' #'.$this->getRequest()->getQueryInput('id');
                 $data['title'] = $action_message;
                 $data['info'] = $action_message.': ';
                 break;
@@ -229,7 +229,7 @@ trait HasPublisherUi
     {
         $this->remember();
 
-        $validator = Validator::make($this->request->getInputs(), $this->request->getPostRules());
+        $validator = Validator::make($this->getRequest()->getInputs(), $this->getRequest()->getRequestRules());
         $validator->validate();
 
 
@@ -265,7 +265,7 @@ trait HasPublisherUi
     public function edit($id)
     {
         $this->remember();
-        $this->request->mergeInputs(['id' => $id]);
+        $this->getRequest()->mergeInputs(['id' => $id]);
 
         if ($this->publisher->displayed())
             return $this->returnView('item', $this->composeItem());
@@ -284,9 +284,9 @@ trait HasPublisherUi
     public function update($id)
     {
         $this->remember();
-        $this->request->mergeInputs(['id' => $id]);
+        $this->getRequest()->mergeInputs(['id' => $id]);
 
-        $validator = Validator::make($this->request->getInputs(), $this->request->getPostRules());
+        $validator = Validator::make($this->getRequest()->getInputs(), $this->getRequest()->getRequestRules());
         $validator->validate();
 
         if ($this->publisher->update()) {
@@ -308,9 +308,9 @@ trait HasPublisherUi
     public function destroy($id)
     {
         $this->remember();
-        $this->request->setInputs(['id' => $id]);
+        $this->getRequest()->setInputs(['id' => $id]);
 
-        $validator = Validator::make(['id' => $id], $this->request->getPostRules());
+        $validator = Validator::make(['id' => $id], $this->getRequest()->getRequestRules());
         $validator->validate();
 
         if ($this->publisher->delete()) {
@@ -337,12 +337,12 @@ trait HasPublisherUi
     {
         $this->remember();
 
-        $validator = Validator::make($this->request->getQueryInputs(), $this->request->getRules());
+        $validator = Validator::make($this->getRequest()->getQueryInputs(), $this->getRequest()->getQueryRules());
         $validator->validate();
 
         if ($affected = $this->publisher->action()) {
             $this->setDataModified();
-            return $this->goBack('ui.msg.records_affected_by', ['action' => ("\"".$this->request->getAction()."\""), 'affected' => $affected]);
+            return $this->goBack('ui.msg.records_affected_by', ['action' => ("\"".$this->getRequest()->getAction()."\""), 'affected' => $affected]);
         } else
             return $this->goBack('ui.msg.no_data_affected');
     }

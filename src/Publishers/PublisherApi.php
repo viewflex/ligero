@@ -27,22 +27,25 @@ class PublisherApi implements PublisherApiInterface
     protected $config;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var Query
-     */
-    protected $query;
-
-    /**
      * @return Config
      */
     public function getConfig()
     {
         return $this->config;
     }
+
+    /**
+     * @param Config $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @var Request
+     */
+    protected $request;
 
     /**
      * @return Request
@@ -53,18 +56,25 @@ class PublisherApi implements PublisherApiInterface
     }
 
     /**
+     * @param Request $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @var Query
+     */
+    protected $query;
+
+    /**
      * @return Query
      */
     public function getQuery()
     {
         return $this->query;
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Initialization
-    |--------------------------------------------------------------------------
-    */
     
     /**
      * @param Query $query
@@ -85,8 +95,8 @@ class PublisherApi implements PublisherApiInterface
      */
     public function __construct(Config $config, Request $request, Query $query = null)
     {
-        $this->config = $config;
-        $this->request = $request;
+        $this->setConfig($config);
+        $this->setRequest($request);
 
         if (!$this->modelExists())
             throw new PublisherException('Specified model '.$this->modelName().' cannot be found.');

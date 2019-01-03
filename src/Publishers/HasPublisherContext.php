@@ -1,12 +1,15 @@
 <?php
 
-namespace Viewflex\Ligero\Base;
+namespace Viewflex\Ligero\Publishers;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-trait HasContext
+trait HasPublisherContext
 {
+    
+    use HasPublisher;
+    
     /*
     |--------------------------------------------------------------------------
     | Basic CRUD Actions with Pre-Validation Using Domain Rules
@@ -35,7 +38,7 @@ trait HasContext
 
             // Perform query, catching any internal errors.
             try {
-                $found = $this->publisher->find($id, $native);
+                $found = $this->getPublisher()->find($id, $native);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -73,7 +76,7 @@ trait HasContext
 
             // Perform query, returning any internal errors.
             try {
-                $found = $this->publisher->findBy($inputs, $native);
+                $found = $this->getPublisher()->findBy($inputs, $native);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -110,7 +113,7 @@ trait HasContext
 
             // Perform request, returning any internal errors.
             try {
-                $response = $this->publisher->store($inputs);
+                $response = $this->getPublisher()->store($inputs);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -147,7 +150,7 @@ trait HasContext
 
             // Perform request, returning any internal errors.
             try {
-                $response = $this->publisher->update($inputs);
+                $response = $this->getPublisher()->update($inputs);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -183,7 +186,7 @@ trait HasContext
 
         // Perform request, returning any internal errors.
         try {
-            $response = $this->publisher->delete($id);
+            $response = $this->getPublisher()->delete($id);
         } catch (\Exception $e) {
             return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
         }
@@ -264,7 +267,7 @@ trait HasContext
      */
     public function inputsAreValid($inputs = [])
     {
-        return $this->publisher->inputsAreValid($inputs);
+        return $this->getPublisher()->inputsAreValid($inputs);
     }
 
     /*

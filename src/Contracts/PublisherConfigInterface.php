@@ -258,6 +258,13 @@ interface PublisherConfigInterface
      */
     public function setKeywordSearchConfig($keyword_search_config);
 
+    /**
+     * Set keyword search columns.
+     *
+     * @param array $keyword_search_columns
+     */
+    public function setKeywordSearchColumns($keyword_search_columns);
+
     /*
     |--------------------------------------------------------------------------
     |  Sorts and View/Limit
@@ -272,7 +279,7 @@ interface PublisherConfigInterface
     public function getSorts();
 
     /**
-     * Set named sorts.
+     * Add or replace named sorts.
      *
      * @param array $sorts
      */
@@ -294,7 +301,7 @@ interface PublisherConfigInterface
     public function getViewLimits();
 
     /**
-     * Set limits for named views.
+     * Add or replace limits for named views.
      *
      * @param array $view_limits
      */
@@ -309,8 +316,8 @@ interface PublisherConfigInterface
     public function getViewLimit($view = 'default');
 
     /**
-     * Set limit for given view, or if not specified,
-     * set the 'default' view limit with input.
+     * Add or replace limit for named view, or if
+     * not specified, set the 'default' limit.
      *
      * @param int $view_limit
      * @param string $view
@@ -371,7 +378,7 @@ interface PublisherConfigInterface
      *
      * @return bool
      */
-    public function absoluteUrls();
+    public function getAbsoluteUrls();
 
     /**
      * Set absolute_urls config.
@@ -465,7 +472,7 @@ interface PublisherConfigInterface
      *
      * @return bool
      */
-    public function unitConversions();
+    public function getUnitConversions();
 
     /**
      * Set unit_conversions config.

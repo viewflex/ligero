@@ -24,7 +24,7 @@ interface PublisherRepositoryInterface
      *
      * @param Api $api
      */
-    public function setApi(Api $api);
+    public function setApi($api);
 
     /*
     |--------------------------------------------------------------------------

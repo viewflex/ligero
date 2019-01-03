@@ -186,7 +186,8 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getModelName()
     {
-        return (array_key_exists($this->table_name, $this->models)) ? $this->models[$this->table_name] : $this->model_name;
+        $models = $this->getModels();
+        return (array_key_exists($this->table_name, $models)) ? $models[$this->table_name] : $this->model_name;
     }
 
     /**
@@ -215,11 +216,11 @@ class BasePublisherConfig implements PublisherConfigInterface
         'sort'          => '',
         'view'          => 'list',
         'limit'         => '',
-        'start'         => '0',
+        'start'         => '',
         'action'        => '',
         'items'         => '',
         'options'       => '',
-        'page'          => '1'
+        'page'          => ''
     ];
 
     /**
@@ -231,15 +232,6 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     protected $results_columns = [
         'default'  => [
-            'id'
-        ],
-        'list'  => [
-            'id'
-        ],
-        'grid'  => [
-            'id'
-        ],
-        'item'  => [
             'id'
         ]
     ];
@@ -402,18 +394,18 @@ class BasePublisherConfig implements PublisherConfigInterface
     protected $pagination_config = [
         'pager'             =>  [
             'make'              =>  true,
-            'context'           =>  'relative',
+            'context'           =>  'logical',
         ],
         'page_menu'         =>  [
             'make'              =>  true,
-            'context'           =>  'relative',
+            'context'           =>  'logical',
             'max_links'         =>  5
         ],
         'view_menu'         =>  [
             'make'              =>  true,
-            'context'           =>  'relative',
+            'context'           =>  'logical',
         ],
-        'use_page_number'   =>  false
+        'use_page_number'   =>  true
 
     ];
 
@@ -449,16 +441,11 @@ class BasePublisherConfig implements PublisherConfigInterface
      * @var array
      */
     protected $keyword_search_config = [
-        'columns'               =>  [
-            'name',
-            'category',
-            'subcategory',
-            'description'
-        ],
+        'columns'               =>  [],
         'scope'                 =>  'query',
         'persist_sort'          =>  true,
         'persist_view'          =>  true,
-        'persist_input'         =>  true,
+        'persist_input'         =>  false,
         'on_change'             => 'this.form.submit()'
     ];
 
@@ -478,6 +465,14 @@ class BasePublisherConfig implements PublisherConfigInterface
         $this->keyword_search_config = $keyword_search_config;
     }
 
+    /**
+     * @param array $keyword_search_columns
+     */
+    public function setKeywordSearchColumns($keyword_search_columns)
+    {
+        $this->keyword_search_config['columns'] = $keyword_search_columns;
+    }
+
     /*
     |--------------------------------------------------------------------------
     |  Sorts and View/Limit
@@ -485,19 +480,18 @@ class BasePublisherConfig implements PublisherConfigInterface
     */
 
     /**
-     * The various named sorts for use in listing query.
+     * The various named sorts for use in publisher query.
      * There should always be at least the 'default'.
      *
      * @var array
      */
     protected $sorts = [
-        'default'           => ['id' => 'desc'],
-        'id'                => ['id' => 'asc']
+        'default'           => ['id' => 'asc']
     ];
 
     /**
-     * The named views for listing query, with their limits.
-     * There should always be a value for the 'default'.
+     * The named views for publisher query, with their limits.
+     * There should always be at least the 'default'.
      *
      * @var array
      */
@@ -521,7 +515,9 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function setSorts($sorts)
     {
-        $this->sorts = $sorts;
+        foreach ($sorts as $name => $value) {
+            $this->sorts[$name] = $value;
+        }
     }
 
     /**
@@ -546,7 +542,9 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function setViewLimits($view_limits)
     {
-        $this->view_limits = $view_limits;
+        foreach ($view_limits as $name => $value) {
+            $this->view_limits[$name] = $value;
+        }
     }
 
     /**
@@ -587,21 +585,21 @@ class BasePublisherConfig implements PublisherConfigInterface
      *
      * @var array
      */
-    protected $caching = [];
+    protected $caching;
 
     /**
      * Global logging config.
      *
      * @var array
      */
-    protected $logging = [];
+    protected $logging;
 
     /**
      * @return array
      */
     public function getCaching()
     {
-        if (! $this->caching) {
+        if (! isset($this->caching)) {
             $this->setCaching(config('ligero.caching', [
                 'active'        =>  false,
                 'minutes'       =>  10
@@ -627,7 +625,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getLogging()
     {
-        if (! $this->logging) {
+        if (! isset($this->logging)) {
             $this->setLogging(config('ligero.logging', [
                 'active'        =>  false
             ]));
@@ -656,34 +654,44 @@ class BasePublisherConfig implements PublisherConfigInterface
     /**
      * Use absolute route in URLs or not?
      *
-     * @var bool|null
+     * @var bool
      */
-    protected $absolute_urls = null;
+    protected $absolute_urls;
     
     /**
      * Paths to site's 'home' URL, content images, graphics, css, etc.
      *
      * @var array
      */
-    protected $paths = [];
+    protected $paths;
 
     /**
      * Switches for various built-in options.
      *
      * @var array
      */
-    protected $options = [];
+    protected $options;
 
     /**
      * @return bool
      */
-    public function absoluteUrls()
+    public function getAbsoluteUrls()
     {
-        if (! $this->absolute_urls) {
+        if (! isset($this->absolute_urls)) {
             $this->setAbsoluteUrls(config('ligero.absolute_urls', false));
         }
 
         return $this->absolute_urls;
+    }
+
+    /**
+     * Alias for getAbsoluteUrls().
+     *
+     * @return bool
+     */
+    public function absoluteUrls()
+    {
+        return $this->absoluteUrls();
     }
 
     /**
@@ -699,7 +707,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getPaths()
     {
-        if (! $this->paths) {
+        if (! isset($this->paths)) {
             $this->setPaths(config('ligero.paths', []));
         }
 
@@ -739,10 +747,8 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getOptions()
     {
-        if (! $this->options) {
-            $this->setOptions(config('ligero.options', [
-                'unit_conversions'  => false
-            ]));
+        if (! isset($this->options)) {
+            $this->setOptions(config('ligero.options', []));
         }
 
         return $this->options;
@@ -787,42 +793,46 @@ class BasePublisherConfig implements PublisherConfigInterface
      *
      * @var string
      */
-    protected $formatter = null;
+    protected $formatter;
 
     /**
      * Convert primary currency and measurement units to secondary formats?
      * Does not modify data, only provides additional translated values.
      *
-     * @var bool|null
+     * @var bool
      */
-    protected $unit_conversions = null;
+    protected $unit_conversions;
     
     /**
      * Primary and secondary currencies.
      *
      * @var array
      */
-    protected $currencies = [];
+    protected $currencies;
 
     /**
      * Primary and secondary ruler units.
      *
      * @var array
      */
-    protected $ruler_units = [];
+    protected $ruler_units;
 
     /**
      * Primary and secondary weight units.
      *
      * @var array
      */
-    protected $weight_units = [];
+    protected $weight_units;
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getFormatter()
     {
+        if (! isset($this->formatter)) {
+            $this->setFormatter(config('ligero.formatter', ''));
+        }
+        
         return $this->formatter;
     }
 
@@ -837,13 +847,23 @@ class BasePublisherConfig implements PublisherConfigInterface
     /**
      * @return bool
      */
-    public function unitConversions()
+    public function getUnitConversions()
     {
-        if (! $this->unit_conversions) {
+        if (! isset($this->unit_conversions)) {
             $this->setUnitConversions(config('ligero.unit_conversions', false));
         }
 
         return $this->unit_conversions;
+    }
+
+    /**
+     * Alias for getUnitConversions()
+     *
+     * @return bool
+     */
+    public function unitConversions()
+    {
+        return $this->getUnitConversions();
     }
 
     /**
@@ -859,7 +879,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getCurrencies()
     {
-        if (! $this->currencies) {
+        if (! isset($this->currencies)) {
             $this->setCurrencies(config('ligero.currencies', [
                 'primary'           =>  [
                     'name'              =>  'US Dollars',
@@ -871,12 +891,12 @@ class BasePublisherConfig implements PublisherConfigInterface
                     'precision'         =>  2
                 ],
                 'secondary'         =>  [
-                    'name'              =>  'Canadian Dollars',
-                    'ISO_code'          =>  'CAD',
-                    'prefix'            =>  '$',
-                    'suffix'            =>  'CAD',
-                    'thousands'         =>  ',',
-                    'decimal'           =>  '.',
+                    'name'              =>  'EU Euros',
+                    'ISO_code'          =>  'EUR',
+                    'prefix'            =>  '',
+                    'suffix'            =>  '€',
+                    'thousands'         =>  '.',
+                    'decimal'           =>  ',',
                     'precision'         =>  2
                 ]
             ]));
@@ -898,7 +918,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getRulerUnits()
     {
-        if (! $this->ruler_units) {
+        if (! isset($this->ruler_units)) {
             $this->setRulerUnits(config('ligero.ruler_units', [
                 'primary'           =>  [
                     'name'              =>  'inches',
@@ -931,7 +951,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getWeightUnits()
     {
-        if (! $this->weight_units) {
+        if (! isset($this->weight_units)) {
             $this->setWeightUnits(config('ligero.weight_units', [
                 'primary'           =>  [
                     'name'              =>  'pound',
@@ -974,7 +994,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      *
      * @var array
      */
-    protected $tables = [];
+    protected $tables;
 
     /**
      * The models representing the package domains.
@@ -983,7 +1003,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      *
      * @var array
      */
-    protected $models = [];
+    protected $models;
 
     /**
      * The contexts for package domains, corresponding to api/<package>/{key} route parameter.
@@ -992,14 +1012,14 @@ class BasePublisherConfig implements PublisherConfigInterface
      *
      * @var array
      */
-    protected $contexts = [];
+    protected $contexts;
 
     /**
      * @return array
      */
     public function getTables()
     {
-        if (! $this->tables) {
+        if (! isset($this->tables)) {
             $this->setTables(config('ligero.tables', []));
         }
         
@@ -1019,7 +1039,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getModels()
     {
-        if (! $this->models) {
+        if (! isset($this->models)) {
             $this->setModels(config('ligero.models', []));
         }
         
@@ -1039,7 +1059,7 @@ class BasePublisherConfig implements PublisherConfigInterface
      */
     public function getContexts()
     {
-        if (! $this->contexts) {
+        if (! isset($this->contexts)) {
             $this->setContexts(config('ligero.contexts', []));
         }
 

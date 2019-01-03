@@ -23,14 +23,14 @@ trait PublisherApiTrait
             'route'                     =>  $this->getRoute(),
             'parameters'                =>  [
                 'inputs'                    =>  $this->getUrlParametersExcept(),
-                'defaults'                  =>  array_filter($this->config->getQueryDefaults(), 'strlen'),
+                'defaults'                  =>  array_filter($this->getConfig()->getQueryDefaults(), 'strlen'),
                 'all'                       =>  $this->getQueryParameters()
             ],
             'view'                      =>  $this->getQueryView(),
             'limit'                     =>  $this->getQueryLimit(),
             'start'                     =>  $this->getQueryStart(),
-            'found'                     =>  $this->query->found(),
-            'displayed'                 =>  $this->query->displayed()
+            'found'                     =>  $this->getQuery()->found(),
+            'displayed'                 =>  $this->getQuery()->displayed()
         ];
     }
 
@@ -42,7 +42,7 @@ trait PublisherApiTrait
      */
     public function found()
     {
-        return $this->query->found();
+        return $this->getQuery()->found();
     }
 
     /**
@@ -52,7 +52,7 @@ trait PublisherApiTrait
      */
     public function displayed()
     {
-        return $this->query->displayed();
+        return $this->getQuery()->displayed();
     }
 
     /**
@@ -62,7 +62,7 @@ trait PublisherApiTrait
      */
     public function getResults()
     {
-        return $this->query->getResults();
+        return $this->getQuery()->getResults();
     }
 
     /**
@@ -72,7 +72,7 @@ trait PublisherApiTrait
      */
     public function getItems()
     {
-        return $this->query->getItems();
+        return $this->getQuery()->getItems();
     }
 
     /**
@@ -96,19 +96,19 @@ trait PublisherApiTrait
      */
     public function getPagination()
     {
-        if ($this->config->getControl('pagination')) {
+        if ($this->getConfig()->getControl('pagination')) {
 
-            $found = $this->query->found();
+            $found = $this->getQuery()->found();
             $view = $this->getQueryView();
             $start = $this->getQueryStart();
-            $displayed = $this->query->displayed();
+            $displayed = $this->getQuery()->displayed();
 
             $str_first = strval($start + 1);
             $str_last = $displayed > 1 ? strval($start+$displayed) : strval($start + $displayed);
-            $str_range = $displayed > 1 ? $str_first.$this->config->ls('ui.symbol.range').$str_last : $str_first;
+            $str_range = $displayed > 1 ? $str_first.$this->getConfig()->ls('ui.symbol.range').$str_last : $str_first;
             $route = $this->getRoute();
 
-            $config = $this->config->getPaginationConfig();
+            $config = $this->getConfig()->getPaginationConfig();
             $pager = $page_menu = $view_menu = null;
 
             if ($config['pager']['make'])
@@ -152,10 +152,10 @@ trait PublisherApiTrait
      */
     public function getKeywordSearch()
     {
-        if ($this->config->getControl('keyword_search')) {
+        if ($this->getConfig()->getControl('keyword_search')) {
 
             $route = $this->getRoute();
-            $config = $this->config->getKeywordSearchConfig();
+            $config = $this->getConfig()->getKeywordSearchConfig();
             $base_params = $this->getUrlBaseParameters();
             $display_params = $this->getUrlDisplayParameters($config, $base_params);
             $keyword = $this->getQueryKeyword();
@@ -184,7 +184,7 @@ trait PublisherApiTrait
                 'base_parameters'   =>  $params,
                 'keyword'           =>  $keyword,
                 'clear'             =>  $clear,
-                'label_search'      =>  $this->config->ls('ui.label.search')
+                'label_search'      =>  $this->getConfig()->ls('ui.label.search')
             ];
 
         }
@@ -224,7 +224,7 @@ trait PublisherApiTrait
         $results = $this->getResults();
 
         if ($results && !$results->isEmpty()) {
-            $columns = $this->config->getResultsColumns($this->getQueryView());
+            $columns = $this->getConfig()->getResultsColumns($this->getQueryView());
 
             $has_presenter = ($results->first()->getPresenter());
 
@@ -236,7 +236,7 @@ trait PublisherApiTrait
             $query_position = $this->getQueryStart() - 1;
 
             // For select_all action, set form checkboxes for displayed items.
-            $inputs = $this->request->getQueryInputs();
+            $inputs = $this->getRequest()->getQueryInputs();
             $form_item_checked = (array_key_exists('action', $inputs) && $inputs['action'] == 'select_all') ? ' CHECKED' : '';
 
             // Loop through collection.
@@ -334,7 +334,7 @@ trait PublisherApiTrait
      */
     public function getRoute()
     {
-        return $this->currentRouteUrlRoot($this->config->absoluteUrls());
+        return $this->currentRouteUrlRoot($this->getConfig()->getAbsoluteUrls());
     }
 
     /**
@@ -346,13 +346,13 @@ trait PublisherApiTrait
      */
     public function getQueryParameters()
     {
-        $query_defaults = array_filter($this->config->getQueryDefaults(), 'strlen');
-        $query_params = $this->request->getQueryInputs();
+        $query_defaults = array_filter($this->getConfig()->getQueryDefaults(), 'strlen');
+        $query_params = $this->getRequest()->getQueryInputs();
 
         foreach ($query_defaults as $key => $default)
             $query_params = array_add($query_params, $key, $default);
 
-        $keys = array_keys($this->request->rules());
+        $keys = array_keys($this->getRequest()->rules());
 
         // Arrange the params in the proper order.
         $params = [];
@@ -384,7 +384,8 @@ trait PublisherApiTrait
     public function getQueryView()
     {
         $params = $this->getQueryParameters();
-        return array_key_exists('view', $params) ? $params['view'] : 'default';
+        return array_key_exists('view', $params) ? $params['view'] : 'list';
+//        return array_key_exists('view', $params) ? $params['view'] : 'default';
     }
 
     /**
@@ -395,7 +396,7 @@ trait PublisherApiTrait
     public function getQuerySort()
     {
         $params = $this->getQueryParameters();
-        return $this->config->getSort(array_key_exists('sort', $params) ? $params['sort'] : 'default');
+        return $this->getConfig()->getSort(array_key_exists('sort', $params) ? $params['sort'] : 'default');
     }
 
     /**
@@ -408,9 +409,9 @@ trait PublisherApiTrait
         $params = $this->getQueryParameters();
 
         if (array_key_exists('view', $params))
-            $limit = $this->config->getViewLimit($params['view']);
+            $limit = $this->getConfig()->getViewLimit($params['view']);
         else
-            $limit = $this->config->getViewLimit();
+            $limit = $this->getConfig()->getViewLimit();
 
         if (array_key_exists('limit', $params))
             $limit = intval($params['limit']);
@@ -485,8 +486,8 @@ trait PublisherApiTrait
      */
     public function getRequestParameters()
     {
-        $request_params = $this->request->getInputs();
-        $keys = array_keys($this->request->getPostRules());
+        $request_params = $this->getRequest()->getInputs();
+        $keys = array_keys($this->getRequest()->getRequestRules());
 
         // Arrange the params in the proper order.
         $params = [];
@@ -520,9 +521,9 @@ trait PublisherApiTrait
     public function getUrlParametersExcept($skip = [])
     {
         $query_params = [];
-        $defaults = array_filter($this->config->getQueryDefaults(), 'strlen');
-        $inputs = $this->request->getQueryInputs();
-        $keys = array_keys($this->request->rules());
+        $defaults = array_filter($this->getConfig()->getQueryDefaults(), 'strlen');
+        $inputs = $this->getRequest()->getQueryInputs();
+        $keys = array_keys($this->getRequest()->rules());
 
         foreach($keys as $key) {
             if (array_key_exists($key, $inputs) && !in_array($key, $skip)) {
@@ -546,7 +547,7 @@ trait PublisherApiTrait
      */
     public function urlQueryString($parameters = [])
     {
-        $keys = array_keys($this->request->rules());
+        $keys = array_keys($this->getRequest()->rules());
         // Arrange the params in the proper order.
         $query_parameters = [];
         foreach($keys as $key) {
@@ -735,7 +736,7 @@ trait PublisherApiTrait
      */
     protected function pager($context = 'relative') {
 
-        $found = $this->query->found();
+        $found = $this->getQuery()->found();
         $limit = $this->getQueryLimit();
         $start = $this->getQueryStart();
         $route = $this->getRoute();
@@ -755,7 +756,7 @@ trait PublisherApiTrait
 
             $page_num = $current_logical_page;
             $num_pages = $num_logical_pages;
-            $use_page_number = $this->config->getPaginationConfig()['use_page_number'];
+            $use_page_number = $this->getConfig()->getPaginationConfig()['use_page_number'];
 
             if ($current_logical_start < $limit) {
                 $prev_page = $first_page = null; // We're already on first page
@@ -835,7 +836,7 @@ trait PublisherApiTrait
     protected function pageMenu($context = 'relative')
     {
         $pages = [];
-        $found = $this->query->found();
+        $found = $this->getQuery()->found();
         $limit = $this->getQueryLimit();
         $start = $this->getQueryStart();
         $route = $this->getRoute();
@@ -844,7 +845,7 @@ trait PublisherApiTrait
         $current_logical_start = $start - $logical_offset;
 
         $nav_base_params = $this->getNavUrlBaseParameters();
-        $max_links = $this->config->getPaginationConfig()['page_menu']['max_links'];
+        $max_links = $this->getConfig()->getPaginationConfig()['page_menu']['max_links'];
 
         if($context == 'relative') {
             // Allow pagination relative to current start row.
@@ -854,7 +855,7 @@ trait PublisherApiTrait
             // Make links with logical pagination (ie: page 1 = start 0),
             // and if enabled use page number instead of start row.
             $using_start = $current_logical_start;
-            $use_page_number = $this->config->getPaginationConfig()['use_page_number'];
+            $use_page_number = $this->getConfig()->getPaginationConfig()['use_page_number'];
         }
 
         // How many pages are in the results using given start?
@@ -988,7 +989,7 @@ trait PublisherApiTrait
             'page'
         ];
         $view_base_params = $this->getUrlParametersExcept($skip);
-        $query_defaults = array_filter($this->config->getQueryDefaults(), 'strlen');
+        $query_defaults = array_filter($this->getConfig()->getQueryDefaults(), 'strlen');
         $view_default = array_key_exists('view', $query_defaults) ? $query_defaults['view'] : '';
 
         switch ($context) {
@@ -999,8 +1000,8 @@ trait PublisherApiTrait
                 // use start row, or calculated page number, as configured,
                 // to keep the starting record displayed after view change.
 
-                if($this->config->getPaginationConfig()['use_page_number']) {
-                    $limits = $this->config->getViewLimits();
+                if($this->getConfig()->getPaginationConfig()['use_page_number']) {
+                    $limits = $this->getConfig()->getViewLimits();
 
                     // list
                     $limit = $limits['list'];
@@ -1061,29 +1062,29 @@ trait PublisherApiTrait
             'context'   =>  $context,
             'views'     =>  [
                 'list'          =>  [
-                    'display'   =>  $this->config->ls('ui.nav.list'),
-                    'limit'     =>  $this->config->getViewLimit('list'),
+                    'display'   =>  $this->getConfig()->ls('ui.nav.list'),
+                    'limit'     =>  $this->getConfig()->getViewLimit('list'),
                     'url'       =>  $list_view
                 ],
                 'grid'          =>  [
-                    'display'   =>  $this->config->ls('ui.nav.grid'),
-                    'limit'     =>  $this->config->getViewLimit('grid'),
+                    'display'   =>  $this->getConfig()->ls('ui.nav.grid'),
+                    'limit'     =>  $this->getConfig()->getViewLimit('grid'),
                     'url'       =>  $grid_view
                 ],
                 'item'          =>  [
-                    'display'   =>  $this->config->ls('ui.nav.item'),
-                    'limit'     =>  $this->config->getViewLimit('item'),
+                    'display'   =>  $this->getConfig()->ls('ui.nav.item'),
+                    'limit'     =>  $this->getConfig()->getViewLimit('item'),
                     'url'       =>  $item_view
                 ]
             ],
             'selected'          =>  $view,
-            'label_view_as'     =>  $this->config->ls('ui.nav.view_as')
+            'label_view_as'     =>  $this->getConfig()->ls('ui.nav.view_as')
         ];
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Query Actions
+    | CRUD Write Actions
     |--------------------------------------------------------------------------
     */
 
@@ -1094,7 +1095,7 @@ trait PublisherApiTrait
      */
     public function store()
     {
-        return $this->query->store();
+        return $this->getQuery()->store();
     }
 
     /**
@@ -1104,7 +1105,7 @@ trait PublisherApiTrait
      */
     public function update()
     {
-        return $this->query->update();
+        return $this->getQuery()->update();
     }
 
     /**
@@ -1114,7 +1115,7 @@ trait PublisherApiTrait
      */
     public function delete()
     {
-        return $this->query->delete();
+        return $this->getQuery()->delete();
     }
 
     /**
@@ -1133,10 +1134,10 @@ trait PublisherApiTrait
     public function action()
     {
         $affected_rows = 0;
-        $action = $this->request->getAction();
+        $action = $this->getRequest()->getAction();
 
-        if (($action !== '') && ($action !== 'select_all') && count($this->request->getActionItems())) {
-            $affected_rows = $this->query->action();
+        if (($action !== '') && ($action !== 'select_all') && count($this->getRequest()->getActionItems())) {
+            $affected_rows = $this->getQuery()->action();
         }
 
         return $affected_rows;

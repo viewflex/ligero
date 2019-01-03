@@ -2,6 +2,7 @@
 
 namespace Viewflex\Ligero\Contracts;
 
+use Viewflex\Ligero\Contracts\PublisherApiInterface as Api;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
 use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
@@ -14,6 +15,20 @@ interface PublisherInterface
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Returns the API used by publisher.
+     * 
+     * @return Api
+     */
+    public function getApi();
+
+    /**
+     * Sets the API used by publisher.
+     * 
+     * @param Api $api
+     */
+    public function setApi($api);
+    
     /**
      * Returns the config used by publisher.
      *
@@ -209,5 +224,14 @@ interface PublisherInterface
      * @return bool
      */
     public function inputsAreValid($inputs = []);
+
+    /**
+     * Get localized string via trans() or trans_choice() based on domain configuration.
+     *
+     * @param string $key
+     * @param null|array|int $option
+     * @return string
+     */
+    public function ls($key, $option = null);
     
 }

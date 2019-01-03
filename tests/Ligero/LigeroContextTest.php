@@ -2,20 +2,24 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use Viewflex\Ligero\Contracts\ContextInterface;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
-use Viewflex\Ligero\Publish\Demo\Items\ItemsContext as Context;
+use Viewflex\Ligero\Publish\Demo\Items\ItemsContext;
 
 class LigeroContextTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * @var ContextInterface
+     */
+    protected $context;
+    
     protected function setUp()
     {
         parent::setUp();
-        
         LigeroTestData::create(['ligero_items' => 'ligero_items']);
-
-        $this->context = new Context;
+        $this->context = new ItemsContext;
     }
 
 

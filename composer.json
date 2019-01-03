@@ -11,7 +11,7 @@
   "license": "MIT",
   "require": {
     "laravel/framework": "~5.2",
-    "viewflex/forex": "^0.1.1"
+    "viewflex/forex": "^0.2.1"
   },
   "autoload": {
     "psr-4": {

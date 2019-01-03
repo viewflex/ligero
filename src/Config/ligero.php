@@ -59,12 +59,12 @@ return [
             'precision'         =>  2
         ],
         'secondary'         =>  [
-            'name'              =>  'Canadian Dollars',
-            'ISO_code'          =>  'CAD',
-            'prefix'            =>  '$',
-            'suffix'            =>  'CAD',
-            'thousands'         =>  ',',
-            'decimal'           =>  '.',
+            'name'              =>  'EU Euros',
+            'ISO_code'          =>  'EUR',
+            'prefix'            =>  '',
+            'suffix'            =>  '€',
+            'thousands'         =>  '.',
+            'decimal'           =>  ',',
             'precision'         =>  2
         ]
     ],
@@ -113,8 +113,6 @@ return [
 
     'models'            => [],
 
-    'contexts'          => [
-        'items'             => '\Viewflex\Ligero\Publish\Demo\Items\ItemsContext'
-    ]
+    'contexts'          => []
 
 ];
