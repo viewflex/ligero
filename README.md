@@ -5,7 +5,7 @@
 
 ## QuickStart
 
-A lightweight yet versatile CRUD micro-framework for Laravel, with dynamic pagination and search controls, query caching, presenters, localization, support for APIs and DDD-style bounded contexts.
+A Laravel CRUD micro-framework supporting rapid declarative prototyping of domains and contexts with UI and API controllers, advanced pagination and search, presenters, localization, and caching.
 
 QuickStart  |  [Configuration](https://github.com/viewflex/ligero-docs/blob/master/CONFIGURATION.md)  |  [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md)
 
