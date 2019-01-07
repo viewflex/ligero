@@ -113,6 +113,8 @@ return [
 
     'models'            => [],
 
-    'contexts'          => []
+    'contexts'          => [
+        'items'             => '\Viewflex\Ligero\Publish\Demo\Items\ItemsContext'
+    ]
 
 ];
