@@ -2,6 +2,9 @@
 
 namespace Viewflex\Ligero\Publishers;
 
+/**
+ * Methods of the Ligero Publisher class.
+ */
 trait PublisherApiTrait
 {
     /*

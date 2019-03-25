@@ -5,6 +5,9 @@ namespace Viewflex\Ligero\Controllers;
 use App\Http\Controllers\Controller;
 use Viewflex\Ligero\Contracts\ContextInterface as Context;
 
+/**
+ * Provides API access to a Context.
+ */
 class ContextApiController extends Controller
 {
     use HasContextApi;

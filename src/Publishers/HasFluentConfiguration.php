@@ -3,7 +3,7 @@
 namespace Viewflex\Ligero\Publishers;
 
 /**
- * Convenient fluent configuration of the Config, Request, Query components.
+ * Convenient fluent configuration of Publisher components.
  */
 trait HasFluentConfiguration
 {

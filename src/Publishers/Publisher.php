@@ -4,13 +4,13 @@ namespace Viewflex\Ligero\Publishers;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Viewflex\Ligero\Base\BasePublisherConfig as DefaultConfig;
-use Viewflex\Ligero\Base\BasePublisherRequest as DefaultRequest;
 use Viewflex\Ligero\Base\BasePublisherRepository as DefaultQuery;
-use Viewflex\Ligero\Contracts\PublisherInterface;
+use Viewflex\Ligero\Base\BasePublisherRequest as DefaultRequest;
 use Viewflex\Ligero\Contracts\PublisherApiInterface as Api;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
-use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
+use Viewflex\Ligero\Contracts\PublisherInterface;
 use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
+use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Exceptions\PublisherException;
 
 class Publisher implements PublisherInterface

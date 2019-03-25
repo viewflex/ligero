@@ -5,15 +5,17 @@ namespace Viewflex\Ligero\Publishers;
 use Viewflex\Ligero\Base\BasePublisherRepository;
 use Viewflex\Ligero\Contracts\PublisherApiInterface;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
-use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
+use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Exceptions\PublisherException;
 use Viewflex\Ligero\Utility\ModelLoaderTrait;
 use Viewflex\Ligero\Utility\RouteHelperTrait;
 
 class PublisherApi implements PublisherApiInterface
 {
-    use PublisherApiTrait, ModelLoaderTrait, RouteHelperTrait;
+    use ModelLoaderTrait;
+    use PublisherApiTrait;
+    use RouteHelperTrait;
 
     /*
     |--------------------------------------------------------------------------

@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 trait HasPublisherContext
 {
-    
-    use HasPublisher;
-    
+
     /*
     |--------------------------------------------------------------------------
     | Basic CRUD Actions with Pre-Validation Using Domain Rules
@@ -38,7 +36,7 @@ trait HasPublisherContext
 
             // Perform query, catching any internal errors.
             try {
-                $found = $this->getPublisher()->find($id, $native);
+                $found = $this->publisher->find($id, $native);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -76,7 +74,7 @@ trait HasPublisherContext
 
             // Perform query, returning any internal errors.
             try {
-                $found = $this->getPublisher()->findBy($inputs, $native);
+                $found = $this->publisher->findBy($inputs, $native);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -113,7 +111,7 @@ trait HasPublisherContext
 
             // Perform request, returning any internal errors.
             try {
-                $response = $this->getPublisher()->store($inputs);
+                $response = $this->publisher->store($inputs);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -150,7 +148,7 @@ trait HasPublisherContext
 
             // Perform request, returning any internal errors.
             try {
-                $response = $this->getPublisher()->update($inputs);
+                $response = $this->publisher->update($inputs);
             } catch (\Exception $e) {
                 return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
             }
@@ -186,7 +184,7 @@ trait HasPublisherContext
 
         // Perform request, returning any internal errors.
         try {
-            $response = $this->getPublisher()->delete($id);
+            $response = $this->publisher->delete($id);
         } catch (\Exception $e) {
             return $this->contextResponse(0, 'Internal error: '.$e->getMessage(), null);
         }
@@ -267,7 +265,7 @@ trait HasPublisherContext
      */
     public function inputsAreValid($inputs = [])
     {
-        return $this->getPublisher()->inputsAreValid($inputs);
+        return $this->publisher->inputsAreValid($inputs);
     }
 
     /*
@@ -375,4 +373,5 @@ trait HasPublisherContext
 
         return $message;
     }
+    
 }

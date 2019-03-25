@@ -4,6 +4,9 @@ namespace Viewflex\Ligero\Publishers;
 
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Methods of the Ligero Publisher class.
+ */
 trait PublisherTrait
 {
     /*

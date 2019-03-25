@@ -3,16 +3,13 @@
 namespace Viewflex\Ligero\Publishers;
 
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+/**
+ * Methods for maintaining session-based state in a Publisher UI controller.
+ */
 trait HasPublisherSession
 {
-    use HasPublisher;
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Controller 'Back To' Functionality For Publisher, Using Sessions
-    |--------------------------------------------------------------------------
-    */
 
     /**
      * Set initial 'back_to' query and 'root' uri in session, flashing previously set
@@ -136,6 +133,19 @@ trait HasPublisherSession
     public function getMessage()
     {
         return Session::get('message');
+    }
+
+    /**
+     * Initialize the publisher request with data from current request,
+     * similar to how it is done in FormRequestServiceProvider boot().
+     * As of L5.4, the full request is not available in controller
+     * constructor, so we should call this in each action method.
+     *
+     * @param SymfonyRequest $current
+     */
+    protected function initializeRequest(SymfonyRequest $current)
+    {
+        $this->getRequest()->initializeRequest($current);
     }
 
 }

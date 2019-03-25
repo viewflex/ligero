@@ -4,14 +4,19 @@ namespace Viewflex\Ligero\Base;
 
 use Viewflex\Ligero\Contracts\AggregateContextInterface;
 
+/**
+ * Extend this class and configure its default Publisher,
+ * implementing abstract methods supporting aggregates.
+ */
 abstract class AggregateContext extends BaseContext implements AggregateContextInterface
 {
+
     /*
     |--------------------------------------------------------------------------
     | Rich Context Query Actions
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * @param int $id
      * @param bool $native
@@ -60,7 +65,7 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
     | Context Output Composition
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * @param $root
      * @param bool $native
@@ -73,11 +78,10 @@ abstract class AggregateContext extends BaseContext implements AggregateContextI
     | Context Input Validation
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * @param array $inputs
      * @return array|bool
      */
     abstract public function contextInputsAreValid($inputs);
-    
 }

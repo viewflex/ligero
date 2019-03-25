@@ -3,8 +3,8 @@
 namespace Viewflex\Ligero\Contracts;
 
 use Viewflex\Ligero\Contracts\PublisherConfigInterface as Config;
-use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 use Viewflex\Ligero\Contracts\PublisherRepositoryInterface as Query;
+use Viewflex\Ligero\Contracts\PublisherRequestInterface as Request;
 
 interface PublisherApiInterface
 {

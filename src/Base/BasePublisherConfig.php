@@ -4,15 +4,18 @@ namespace Viewflex\Ligero\Base;
 
 use Viewflex\Ligero\Contracts\PublisherConfigInterface;
 
+/**
+ * The base Publisher Config class, used as the default.
+ * Modify values via setters, or extend and customize.
+ * Can override global defaults via config/env files.
+ */
 class BasePublisherConfig implements PublisherConfigInterface
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Publisher Default Configuration
-    |
-    | Override these configuration properties in child classes as needed.
-    |--------------------------------------------------------------------------
-    */
+
+    /**
+     * @var string
+     */
+    protected $package = 'ligero';
 
     /*
     |--------------------------------------------------------------------------
@@ -600,7 +603,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getCaching()
     {
         if (! isset($this->caching)) {
-            $this->setCaching(config('ligero.caching', [
+            $this->setCaching(config($this->package . '.caching', [
                 'active'        =>  false,
                 'minutes'       =>  10
             ]));
@@ -626,7 +629,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getLogging()
     {
         if (! isset($this->logging)) {
-            $this->setLogging(config('ligero.logging', [
+            $this->setLogging(config($this->package . '.logging', [
                 'active'        =>  false
             ]));
         }
@@ -678,7 +681,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getAbsoluteUrls()
     {
         if (! isset($this->absolute_urls)) {
-            $this->setAbsoluteUrls(config('ligero.absolute_urls', false));
+            $this->setAbsoluteUrls(config($this->package . '.absolute_urls', false));
         }
 
         return $this->absolute_urls;
@@ -708,7 +711,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getPaths()
     {
         if (! isset($this->paths)) {
-            $this->setPaths(config('ligero.paths', []));
+            $this->setPaths(config($this->package . '.paths', []));
         }
 
         return $this->paths;
@@ -748,7 +751,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getOptions()
     {
         if (! isset($this->options)) {
-            $this->setOptions(config('ligero.options', []));
+            $this->setOptions(config($this->package . '.options', []));
         }
 
         return $this->options;
@@ -830,7 +833,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getFormatter()
     {
         if (! isset($this->formatter)) {
-            $this->setFormatter(config('ligero.formatter', ''));
+            $this->setFormatter(config($this->package . '.formatter', ''));
         }
         
         return $this->formatter;
@@ -850,7 +853,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getUnitConversions()
     {
         if (! isset($this->unit_conversions)) {
-            $this->setUnitConversions(config('ligero.unit_conversions', false));
+            $this->setUnitConversions(config($this->package . '.unit_conversions', false));
         }
 
         return $this->unit_conversions;
@@ -880,7 +883,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getCurrencies()
     {
         if (! isset($this->currencies)) {
-            $this->setCurrencies(config('ligero.currencies', [
+            $this->setCurrencies(config($this->package . '.currencies', [
                 'primary'           =>  [
                     'name'              =>  'US Dollars',
                     'ISO_code'          =>  'USD',
@@ -919,7 +922,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getRulerUnits()
     {
         if (! isset($this->ruler_units)) {
-            $this->setRulerUnits(config('ligero.ruler_units', [
+            $this->setRulerUnits(config($this->package . '.ruler_units', [
                 'primary'           =>  [
                     'name'              =>  'inches',
                     'symbol'            =>  'in',
@@ -952,7 +955,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getWeightUnits()
     {
         if (! isset($this->weight_units)) {
-            $this->setWeightUnits(config('ligero.weight_units', [
+            $this->setWeightUnits(config($this->package . '.weight_units', [
                 'primary'           =>  [
                     'name'              =>  'pound',
                     'symbol'            =>  'lb',
@@ -1020,7 +1023,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getTables()
     {
         if (! isset($this->tables)) {
-            $this->setTables(config('ligero.tables', []));
+            $this->setTables(config($this->package . '.tables', []));
         }
         
         return $this->tables;
@@ -1040,7 +1043,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getModels()
     {
         if (! isset($this->models)) {
-            $this->setModels(config('ligero.models', []));
+            $this->setModels(config($this->package . '.models', []));
         }
         
         return $this->models;
@@ -1060,7 +1063,7 @@ class BasePublisherConfig implements PublisherConfigInterface
     public function getContexts()
     {
         if (! isset($this->contexts)) {
-            $this->setContexts(config('ligero.contexts', []));
+            $this->setContexts(config($this->package . '.contexts', []));
         }
 
         return $this->contexts;

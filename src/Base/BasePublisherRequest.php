@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Viewflex\Ligero\Contracts\PublisherRequestInterface;
 
+/**
+ * The base Publisher Request class, used as the default.
+ * Modify properties via setters, or extend and customize.
+ */
 class BasePublisherRequest extends Request implements PublisherRequestInterface
 {
     /*
@@ -188,9 +192,7 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     {
         $this->request_rules[$name] = $value;
     }
-
-    // Aliases for backward compatibility
-
+    
     /**
      * Alias for getRequestRules().
      * 
