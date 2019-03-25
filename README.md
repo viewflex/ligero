@@ -5,7 +5,7 @@
 
 ## QuickStart
 
-A Laravel CRUD micro-framework supporting rapid declarative prototyping of domains and contexts with UI and API controllers, advanced pagination and search, presenters, localization, and caching.
+A Laravel BREAD micro-framework supporting rapid modeling of domains with UI and API controllers, multiple view modes, advanced search, pagination, presenters, localization and caching.
 
 QuickStart  |  [Configuration](https://github.com/viewflex/ligero-docs/blob/master/CONFIGURATION.md)  |  [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md)
 
@@ -34,11 +34,11 @@ Viewflex\Ligero\LigeroServiceProvider::class,
 
 ### Overview
 
-The goal is to provide a versatile, extensible CRUD micro-framework that can be easily understood and deployed, while integrating all the necessary class types, following SOLID design principles, and enabling rapid modeling of domains.
+The goal is to provide a versatile, extensible BREAD (Browse-Read-Edit-Add-Delete) micro-framework that can be easily understood and deployed, while integrating all the necessary class types, following SOLID design principles, and enabling rapid modeling of domains.
 
-CRUD operations and generation of dynamic controls are performed via a **Publisher** object, which serves a particular representation of a business or application domain. A Publisher encapsulates a distinct set of components, representing configuration, request, and repository - through configuration of these components we customize a Publisher for the required tasks.
+BREAD operations and generation of dynamic controls are performed via a **Publisher** object, which serves a particular representation of a business or application domain. A Publisher encapsulates a distinct set of components, representing configuration, request, and repository - through configuration of these components we customize a Publisher for the required tasks.
 
-This package combines an elegant interface for creating, configuring and using Publishers, with a modular architecture that allows enhancement of all components via extension or decoration. With scaffolding for Publisher controllers and contexts, it provides a path for implementing both simple CRUD functionality and complex multi-domain applications and services.
+This package combines an elegant interface for creating, configuring and using Publishers, with a modular architecture that allows enhancement of all components via extension or decoration. With scaffolding for Publisher controllers and contexts, it provides a path for implementing both simple BREAD functionality and complex multi-domain applications and services.
 
 This documentation, along with the included demo, shows various ways to implement a Publisher in real-world applications, but in it's simplest form, this one line creates a configured Publisher which returns a data bundle containing the requested results and UI data:
 
@@ -48,13 +48,13 @@ $data = (new Publisher($config, $request))->getData();
 
 #### Managing Complexity
 
-Let's face it, implementing even simple CRUD involves more than just calling a few Eloquent methods. As it turns out, though, much of the code, even for complex multi-domain applications, can be broken out into standard components for reuse. This package attempts to abstract as much of the functionality as possible to support easy declarative configuration of a domain Publisher or Context, allowing quick prototyping of domains and service layers.
+Let's face it, implementing even simple BREAD involves more than just calling a few Eloquent methods. As it turns out, though, much of the code, even for complex multi-domain applications, can be broken out into standard components for reuse. This package attempts to abstract as much of the functionality as possible to support easy declarative configuration of a domain Publisher or Context, allowing quick prototyping of domains and service layers.
 
 
 
 #### Architecture
 
-The assembly of various class types follows the **Strategy Pattern**, and provides all the necessary functionality for processing CRUD requests, returning raw or presented results, and generating dynamic contextual data for UI controls.
+The assembly of various class types follows the **Strategy Pattern**, and provides all the necessary functionality for processing BREAD requests, returning raw or presented results, and generating dynamic contextual data for UI controls.
 
 ![publisher flow](https://raw.githubusercontent.com/viewflex/ligero-docs/master/img/publisher-flow.png)
 
@@ -62,7 +62,7 @@ This pattern is easy to replicate for each domain, enabling rapid scaffolding of
 
 A good place to start understanding any codebase is through the [interfaces](https://github.com/viewflex/ligero/tree/master/src/Contracts). In this package nearly every class implements an interface, providing a clear map of core functionality, and a decoupling of code that allows extension, decoration, or replacement of any class, without side-effects.
 
-It's not necessary to learn about every component before you start using this package - all configuration can be done fluently without extending or decorating classes. See the following sections to get up and running quickly with your own custom CRUD domains.
+It's not necessary to learn about every component before you start using this package - all configuration can be done fluently without extending or decorating classes. See the following sections to get up and running quickly with your own custom BREAD domains.
 
 #### Getting Started
 
@@ -71,7 +71,7 @@ This package provides several ways to create and deploy a domain Publisher, depe
 
 ### Basic Usage
 
-Because this package was designed for maximum extensibility, there are many different ways in which it can be used. Typically you will implement a Publisher in a UI controller or an API controller with at least the basic CRUD methods as endpoints for the routes. The example below illustrates creation of a stateful UI controller serving a domain Publisher. See the [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md) documentation to learn how the demo also makes use of the built-in API controller.
+Because this package was designed for maximum extensibility, there are many different ways in which it can be used. Typically you will implement a Publisher in a UI controller or an API controller with at least the basic BREAD methods as endpoints for the routes. The example below illustrates creation of a stateful UI controller serving a domain Publisher. See the [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md) documentation to learn how the demo also makes use of the built-in API controller.
 
 #### The *Items* Demo
 
@@ -79,7 +79,7 @@ There are multiple ways to implement a Publisher - let's begin by looking at the
 
 ![demo screenshot](https://raw.githubusercontent.com/viewflex/ligero-docs/master/img/screenshots/results-list-view.png)
 
-The *Items* UI pictured above is part of the demo provided in this package; you can try it out using the [demo UI routes](#demo-ui-routes) listed below. It implements a CRUD UI with three view modes and an input form for create/update operations. The templates are all in plain HTML with Bootstrap.css, but the generated data sent to the views could just as easily be presented using any front-end framework desired.
+The *Items* UI pictured above is part of the demo provided in this package; you can try it out using the [demo UI routes](#demo-ui-routes) listed below. It implements a BREAD UI with three view modes and an input form for create/edit operations. The templates are all plain HTML with Bootstrap.css, but the generated data that is displayed could just as easily be presented using any front-end framework.
 
 This package separates presentation from the application logic, generating results with all necessary data elements for dynamic UI components, pre-packaged in a standardized format (use the 'Items > Display as JSON' menu command to see the raw data).
 
@@ -90,7 +90,7 @@ See the [Publishing the Package Files](#publishing-the-package-files) subsection
 
 ##### Demo UI Controller
 
-We start with a new controller extending `BasePublisherController`, to inherit the session-aware CRUD actions and generated UI controls. In the constructor we create a default Publisher and then override the default values as needed using fluent setter methods (see the [Configuration](https://github.com/viewflex/ligero-docs/blob/master/CONFIGURATION.md) documentation for a complete list).
+We start with a new controller extending `BasePublisherController`, to inherit the session-aware BREAD actions and generated UI controls. In the constructor we create a default Publisher and then override the default values as needed using fluent setter methods (see the [Configuration](https://github.com/viewflex/ligero-docs/blob/master/CONFIGURATION.md) documentation for a complete list).
 
 ```php
 namespace Viewflex\Ligero\Publish\Demo\Items;
@@ -156,7 +156,7 @@ class ItemsController extends BasePublisherController
 
 In Laravel, a resourceful controller's routes can be specified with one line, but by using explicit routes, as shown below, we can ensure that the route parameter name is always `{id}`, as the codebase expects. Laravel would otherwise automatically use the singular form of the model name.
 
-Additional routes should be declared first. These two add some special functions to the CRUD layer of the *Items* domain:
+Additional routes should be declared first. These two add some special functions to the BREAD layer of the *Items* domain:
 
 ```php
 Route::get('ligero/items/json', array('as' => 'ligero.items.json', 'uses' => '\Viewflex\Ligero\Publish\Demo\Items\ItemsController@json', 'middleware' => 'web'));
@@ -180,7 +180,7 @@ Route::delete('ligero/items/{id}', array('as' => 'ligero.items.destroy', 'uses' 
 Besides the UI controller used in the demo, this package also includes a Context and API controller serving the API routes for the same *Items* domain. See the [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md) documentation to understand how API calls are routed.
 
 
-#### Thinking Beyond CRUD
+#### Thinking Beyond BREAD
 
 Now that you see how easy it is to implement a Publisher, you may be wondering how they can be used in the wider context of the application under development. If you are thinking along the lines of Domain-Driven Design (DDD) in designing your application, see the [Advanced Usage](https://github.com/viewflex/ligero-docs/blob/master/ADVANCED.md) documentation to understand the built-in support for bounded contexts.
 
@@ -194,7 +194,7 @@ Copy and rename the demo files you need and change the class names. Copy and ren
 
 #### Publishing the Package Files
 
-The package service provider configures `artisan` to publish specific file groups with tags. There are several option available.
+The package service provider configures `artisan` to publish specific file groups with tags. There are several options available.
 
 ##### Routes
 
