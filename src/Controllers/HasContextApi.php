@@ -2,6 +2,9 @@
 
 namespace Viewflex\Ligero\Controllers;
 
+/**
+ * Supports simple and contextual CRUD operations for a Context.
+ */
 trait HasContextApi
 {
     /*

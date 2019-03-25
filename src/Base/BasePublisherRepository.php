@@ -18,9 +18,14 @@ use Viewflex\Ligero\Exceptions\PublisherRepositoryException;
 use Viewflex\Ligero\Utility\ArrayHelperTrait;
 use Viewflex\Ligero\Utility\ModelLoaderTrait;
 
+/**
+ * The base Publisher Repository class, used as the default.
+ * Modify properties via setters, or extend and customize.
+ */
 class BasePublisherRepository implements PublisherRepositoryInterface
 {
-    use ArrayHelperTrait, ModelLoaderTrait;
+    use ArrayHelperTrait;
+    use ModelLoaderTrait;
 
     /**
      * @var Api

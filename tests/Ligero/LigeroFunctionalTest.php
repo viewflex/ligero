@@ -3,10 +3,12 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
+use Viewflex\Ligero\Publishers\HasFluentConfiguration;
 use Viewflex\Ligero\Publishers\HasPublisher;
 
 class LigeroFunctionalTest extends TestCase
 {
+    use HasFluentConfiguration;
     use HasPublisher;
     use DatabaseTransactions;
 
