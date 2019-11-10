@@ -2,7 +2,6 @@
 
 namespace Viewflex\Ligero\Utility;
 
-use Viewflex\Forex\Forex;
 use Viewflex\Ligero\Contracts\PublisherConfigInterface;
 use Viewflex\Ligero\Exceptions\FormatterException;
 
@@ -110,6 +109,7 @@ class Formatter
      *
      * @param float $value
      * @return float
+     * @throws \Viewflex\Forex\ForexException
      */
     public function convertMoney($value)
     {
@@ -120,15 +120,22 @@ class Formatter
      * Gets and stores primary-to-secondary exchange rate.
      *
      * @return float|null
-     * @throws FormatterException
+     * @throws \Viewflex\Forex\ForexException
      */
     public function getExchangeRate()
     {
         if ($this->exchange_rate === null) {
 
+            $provider = '\Viewflex\Forex\Forex';
+
+            // Just return 1 if Forex is not installed.
+            if (! class_exists($provider)) {
+                return 1;
+            }
+
             $money = $this->config->getCurrencies();
 
-            $this->exchange_rate = (new Forex)->getRate(
+            $this->exchange_rate = (new $provider)->getRate(
                 $money['primary']['ISO_code'],
                 $money['secondary']['ISO_code']
             );
@@ -236,6 +243,7 @@ class Formatter
      *
      * @param float $value
      * @return float
+     * @throws FormatterException
      */
     public function convertLength($value)
     {
@@ -292,6 +300,7 @@ class Formatter
      *
      * @param float $value
      * @return float
+     * @throws FormatterException
      */
     public function convertWeight($value)
     {

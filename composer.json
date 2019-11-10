@@ -11,7 +11,9 @@
   "license": "MIT",
   "require": {
     "laravel/framework": "~5.2",
-    "viewflex/forex": "^0.2.1"
+  },
+  "suggest": {
+    "viewflex/forex": "Providing live currency exchange rates, with configurable provider and caching."
   },
   "autoload": {
     "psr-4": {
