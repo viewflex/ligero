@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
 use Tests\TestCase;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
 use Viewflex\Ligero\Publishers\HasFluentConfiguration;
@@ -12,6 +13,9 @@ class LigeroFunctionalTest extends TestCase
     use HasPublisher;
     use DatabaseTransactions;
 
+    /**
+     * @return void
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -53,7 +57,7 @@ class LigeroFunctionalTest extends TestCase
 
         // See if the new record conforms to input.
         $item = $this->publisher->getItems()[0];
-        $this->assertEquals($inputs, array_except($item, 'id'));
+        $this->assertEquals($inputs, Arr::except($item, 'id'));
     }
 
     public function test_publisher_update()

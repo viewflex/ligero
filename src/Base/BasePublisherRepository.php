@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -178,7 +179,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
             if (array_key_exists('id', $params))
                 $query->where($this->mapColumn('id'), '=', $params['id']);
 
-            $others = array_except($this->getApi()->dbQueryParameters($params), ['id']);
+            $others = Arr::except($this->getApi()->dbQueryParameters($params), ['id']);
             $wildcards = $this->getConfig()->getWildcardColumns();
 
             foreach($others as $column => $value)
@@ -534,7 +535,7 @@ class BasePublisherRepository implements PublisherRepositoryInterface
     {
         $mapped = [];
         foreach ($attributes as $key => $value) {
-            $mapped = array_add($mapped, $this->mapColumn($key), $value);
+            $mapped = Arr::add($mapped, $this->mapColumn($key), $value);
         }
 
         return $mapped;

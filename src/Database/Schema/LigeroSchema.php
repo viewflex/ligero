@@ -19,7 +19,7 @@ class LigeroSchema
         // ----------------------------------------
 
         Schema::create($tables['ligero_items'], function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->boolean('active')->default(false);
             $table->string('name', 60)->nullable();
             $table->string('category', 60)->nullable();

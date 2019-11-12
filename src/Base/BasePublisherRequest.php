@@ -3,6 +3,7 @@
 namespace Viewflex\Ligero\Base;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Viewflex\Ligero\Contracts\PublisherRequestInterface;
 
@@ -237,17 +238,17 @@ class BasePublisherRequest extends Request implements PublisherRequestInterface
     {
         $clean_params = array();
         $names = array_keys($this->getQueryRules());
-        $inputs = array_only($this->all(), $names);
+        $inputs = Arr::only($this->all(), $names);
 
         foreach($inputs as $key => $value) {
             // Just pass through array or null value
             if (is_array($value) || ($value === null)) {
-                $clean_params = array_add($clean_params, $key, $value);
+                $clean_params = Arr::add($clean_params, $key, $value);
             } else {
                 // Safety-check value as a string.
                 $clean_value = $this->cleanInput($value);
                 if (!(strlen($clean_value) == 0))
-                    $clean_params = array_add($clean_params, $key, $clean_value);
+                    $clean_params = Arr::add($clean_params, $key, $clean_value);
             }
         }
 

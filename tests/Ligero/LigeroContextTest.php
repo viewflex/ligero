@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
 use Tests\TestCase;
 use Viewflex\Ligero\Contracts\ContextInterface;
 use Viewflex\Ligero\Database\Testing\LigeroTestData;
@@ -14,7 +15,10 @@ class LigeroContextTest extends TestCase
      * @var ContextInterface
      */
     protected $context;
-    
+
+    /**
+     * @return void
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -77,7 +81,7 @@ class LigeroContextTest extends TestCase
 
         // See if the new record conforms to input.
         $item = $this->context->find($id, false)['data'];
-        $this->assertEquals($inputs, array_except($item, 'id'));
+        $this->assertEquals($inputs, Arr::except($item, 'id'));
 
     }
 
