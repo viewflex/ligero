@@ -1,7 +1,7 @@
 {
   "name": "viewflex/ligero",
   "description": "A Laravel BREAD micro-framework supporting rapid modeling of domains with UI and API controllers, multiple view modes, advanced search, pagination, presenters, localization and caching.",
-  "keywords": ["api", "bread", "context", "crud", "ddd", "laravel", "pagination", "scaffold"],
+  "keywords": ["api", "bread", "context", "crud", "ddd", "domain driven design", "laravel", "pagination", "scaffold"],
   "authors": [
     {
       "name": "Adam Sailor",
