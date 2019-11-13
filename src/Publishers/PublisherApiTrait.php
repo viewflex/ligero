@@ -2,6 +2,8 @@
 
 namespace Viewflex\Ligero\Publishers;
 
+use Illuminate\Support\Arr;
+
 /**
  * Methods of the Ligero Publisher class.
  */
@@ -170,7 +172,7 @@ trait PublisherApiTrait
                     break;
 
                 default: // query scope
-                    $params = array_merge(array_except($base_params, 'keyword'), $display_params);
+                    $params = array_merge(Arr::except($base_params, 'keyword'), $display_params);
                     break;
             }
 
@@ -298,11 +300,11 @@ trait PublisherApiTrait
         ];
 
         // Views corresponding to current relative start
-        $rel_view_base_params = array_add($this->getUrlParametersExcept($skip), 'start', $query_position);
+        $rel_view_base_params = Arr::add($this->getUrlParametersExcept($skip), 'start', $query_position);
         $urls = [
-            'list_view' => (($view != 'list') ? $route.$this->urlQueryString(array_add($rel_view_base_params, 'view', 'list')) : '#'),
-            'grid_view' => (($view != 'grid') ? $route.$this->urlQueryString(array_add($rel_view_base_params, 'view', 'grid')) : '#'),
-            'item_view' => (($view != 'item') ? $route.$this->urlQueryString(array_add($rel_view_base_params, 'view', 'item')) : '#'),
+            'list_view' => (($view != 'list') ? $route.$this->urlQueryString(Arr::add($rel_view_base_params, 'view', 'list')) : '#'),
+            'grid_view' => (($view != 'grid') ? $route.$this->urlQueryString(Arr::add($rel_view_base_params, 'view', 'grid')) : '#'),
+            'item_view' => (($view != 'item') ? $route.$this->urlQueryString(Arr::add($rel_view_base_params, 'view', 'item')) : '#'),
             'default_view' => ($route.$this->urlQueryString($rel_view_base_params))
         ];
 
@@ -353,7 +355,7 @@ trait PublisherApiTrait
         $query_params = $this->getRequest()->getQueryInputs();
 
         foreach ($query_defaults as $key => $default)
-            $query_params = array_add($query_params, $key, $default);
+            $query_params = Arr::add($query_params, $key, $default);
 
         $keys = array_keys($this->getRequest()->rules());
 
@@ -361,7 +363,7 @@ trait PublisherApiTrait
         $params = [];
         foreach($keys as $key) {
             if (array_key_exists($key, $query_params)) {
-                $params = array_add($params, $key, $query_params[$key]);
+                $params = Arr::add($params, $key, $query_params[$key]);
             }
         }
 
@@ -496,7 +498,7 @@ trait PublisherApiTrait
         $params = [];
         foreach($keys as $key) {
             if (array_key_exists($key, $request_params)) {
-                $params = array_add($params, $key, $request_params[$key]);
+                $params = Arr::add($params, $key, $request_params[$key]);
             }
         }
 
@@ -532,10 +534,10 @@ trait PublisherApiTrait
             if (array_key_exists($key, $inputs) && !in_array($key, $skip)) {
                 if (array_key_exists($key, $defaults)) {
                     if ($inputs[$key] !== $defaults[$key])
-                        $query_params = array_add($query_params, $key, $inputs[$key]);
+                        $query_params = Arr::add($query_params, $key, $inputs[$key]);
                 }
                 else
-                    $query_params = array_add($query_params, $key, $inputs[$key]);
+                    $query_params = Arr::add($query_params, $key, $inputs[$key]);
             }
         }
 
@@ -555,7 +557,7 @@ trait PublisherApiTrait
         $query_parameters = [];
         foreach($keys as $key) {
             if (array_key_exists($key, $parameters)) {
-                $query_parameters = array_add($query_parameters, $key, $parameters[$key]);
+                $query_parameters = Arr::add($query_parameters, $key, $parameters[$key]);
             }
         }
 
@@ -581,7 +583,7 @@ trait PublisherApiTrait
      */
     public function urlQueryWithStart($params, $start)
     {
-        return $this->urlQueryString(($start > 0) ? array_add($params, 'start', $start) : $params);
+        return $this->urlQueryString(($start > 0) ? Arr::add($params, 'start', $start) : $params);
     }
 
     /**
@@ -593,7 +595,7 @@ trait PublisherApiTrait
      */
     public function urlQueryWithPage($params, $page)
     {
-        return $this->urlQueryString(($page > 1) ? array_add($params, 'page', $page) : $params);
+        return $this->urlQueryString(($page > 1) ? Arr::add($params, 'page', $page) : $params);
     }
 
     /**
@@ -642,15 +644,15 @@ trait PublisherApiTrait
 
         // If configured to persist sort...
         if ($config['persist_sort'] === true && array_key_exists('sort', $base_params))
-            $display_params = array_add($display_params, 'sort', $base_params['sort']);
+            $display_params = Arr::add($display_params, 'sort', $base_params['sort']);
 
         // If configured to persist view/limit...
         if ($config['persist_view'] === true) {
             if (array_key_exists('view', $base_params))
-                $display_params = array_add($display_params, 'view', $base_params['view']);
+                $display_params = Arr::add($display_params, 'view', $base_params['view']);
 
             if (array_key_exists('limit', $base_params))
-                $display_params = array_add($display_params, 'limit', $base_params['limit']);
+                $display_params = Arr::add($display_params, 'limit', $base_params['limit']);
         }
 
         return $display_params;
@@ -870,7 +872,7 @@ trait PublisherApiTrait
 
         // Current page (disabled)
         $pg = $current_page;
-        $pages = array_add($pages, $pg, ['start' => $start, 'url' => null]);
+        $pages = Arr::add($pages, $pg, ['start' => $start, 'url' => null]);
 
         // Previous pages...
         $num_prev_links = intval(floor($num_page_links / 2));
@@ -895,7 +897,7 @@ trait PublisherApiTrait
                     $url = $route.$this->urlQueryWithStart($nav_base_params, strval($start_row));
                 }
 
-                $pages = array_add($pages, $pg, ['start' => $start_row, 'url' => $url]);
+                $pages = Arr::add($pages, $pg, ['start' => $start_row, 'url' => $url]);
 
                 $prev++;
                 $i++;
@@ -923,7 +925,7 @@ trait PublisherApiTrait
                     $url = $route.$this->urlQueryWithStart($nav_base_params, strval($start_row));
                 }
 
-                $pages = array_add($pages, $pg, ['start' => $start_row, 'url' => $url]);
+                $pages = Arr::add($pages, $pg, ['start' => $start_row, 'url' => $url]);
             }
 
             $next++;
@@ -950,7 +952,7 @@ trait PublisherApiTrait
                 $url = $route.$this->urlQueryWithStart($nav_base_params, strval($start_row));
             }
 
-            $pages = array_add($pages, $pg, ['start' => $start_row, 'url' => $url]);
+            $pages = Arr::add($pages, $pg, ['start' => $start_row, 'url' => $url]);
 
             $i++;
         }
@@ -1009,29 +1011,29 @@ trait PublisherApiTrait
                     // list
                     $limit = $limits['list'];
                     $page_number = intval(ceil(($start + 1) / $limit));
-                    $base_params = ($page_number > 1) ? array_add($view_base_params, 'page', $page_number) : $view_base_params;
-                    $list_view = ($view != 'list') ? $route.$this->urlQueryString($view_default == 'list' ? $base_params : array_add($base_params, 'view', 'list')) : null;
+                    $base_params = ($page_number > 1) ? Arr::add($view_base_params, 'page', $page_number) : $view_base_params;
+                    $list_view = ($view != 'list') ? $route.$this->urlQueryString($view_default == 'list' ? $base_params : Arr::add($base_params, 'view', 'list')) : null;
 
                     // grid
                     $limit = $limits['grid'];
                     $page_number = intval(ceil(($start + 1) / $limit));
-                    $base_params = ($page_number > 1) ? array_add($view_base_params, 'page', $page_number) : $view_base_params;
-                    $grid_view = ($view != 'grid') ? $route.$this->urlQueryString($view_default == 'grid' ? $base_params : array_add($base_params, 'view', 'grid')) : null;
+                    $base_params = ($page_number > 1) ? Arr::add($view_base_params, 'page', $page_number) : $view_base_params;
+                    $grid_view = ($view != 'grid') ? $route.$this->urlQueryString($view_default == 'grid' ? $base_params : Arr::add($base_params, 'view', 'grid')) : null;
 
                     // item
                     $limit = $limits['item'];
                     $page_number = intval(ceil(($start + 1) / $limit));
-                    $base_params = ($page_number > 1) ? array_add($view_base_params, 'page', $page_number) : $view_base_params;
-                    $item_view = ($view != 'item')? $route.$this->urlQueryString($view_default == 'item' ? $base_params : array_add($base_params, 'view', 'item')) : null;
+                    $base_params = ($page_number > 1) ? Arr::add($view_base_params, 'page', $page_number) : $view_base_params;
+                    $item_view = ($view != 'item')? $route.$this->urlQueryString($view_default == 'item' ? $base_params : Arr::add($base_params, 'view', 'item')) : null;
 
                 } else {
                     if($current_logical_start) {
-                        $view_base_params = array_add($view_base_params, 'start', $current_logical_start);
+                        $view_base_params = Arr::add($view_base_params, 'start', $current_logical_start);
                     }
 
-                    $list_view = (($view != 'list') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'list' ? $view_base_params : array_add($view_base_params, 'view', 'list')) : null;
-                    $grid_view = (($view != 'grid') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'grid' ? $view_base_params : array_add($view_base_params, 'view', 'grid')) : null;
-                    $item_view = (($view != 'item') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'item' ? $view_base_params : array_add($view_base_params, 'view', 'item')) : null;
+                    $list_view = (($view != 'list') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'list' ? $view_base_params : Arr::add($view_base_params, 'view', 'list')) : null;
+                    $grid_view = (($view != 'grid') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'grid' ? $view_base_params : Arr::add($view_base_params, 'view', 'grid')) : null;
+                    $item_view = (($view != 'item') || ($logical_offset)) ? $route.$this->urlQueryString($view_default == 'item' ? $view_base_params : Arr::add($view_base_params, 'view', 'item')) : null;
                 }
                 break;
             }
@@ -1042,21 +1044,21 @@ trait PublisherApiTrait
                 // keep the starting record displayed after view change.
 
                 if ($start)
-                    $rel_view_base_params = array_add($view_base_params, 'start', $start);
+                    $rel_view_base_params = Arr::add($view_base_params, 'start', $start);
                 else
                     $rel_view_base_params = $view_base_params;
-                $list_view = ($view != 'list') ? $route.$this->urlQueryString($view_default == 'list' ? $rel_view_base_params : array_add($rel_view_base_params, 'view', 'list')) : null;
-                $grid_view = ($view != 'grid') ? $route.$this->urlQueryString($view_default == 'grid' ? $rel_view_base_params : array_add($rel_view_base_params, 'view', 'grid')) : null;
-                $item_view = ($view != 'item') ? $route.$this->urlQueryString($view_default == 'item' ? $rel_view_base_params : array_add($rel_view_base_params, 'view', 'item')) : null;
+                $list_view = ($view != 'list') ? $route.$this->urlQueryString($view_default == 'list' ? $rel_view_base_params : Arr::add($rel_view_base_params, 'view', 'list')) : null;
+                $grid_view = ($view != 'grid') ? $route.$this->urlQueryString($view_default == 'grid' ? $rel_view_base_params : Arr::add($rel_view_base_params, 'view', 'grid')) : null;
+                $item_view = ($view != 'item') ? $route.$this->urlQueryString($view_default == 'item' ? $rel_view_base_params : Arr::add($rel_view_base_params, 'view', 'item')) : null;
                 break;
             }
 
             default: // or fresh
             {
                 // Views corresponding to zero logical start, without regard to current starting position.
-                $list_view = !(($view == 'list') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'list' ? $view_base_params : array_add($view_base_params, 'view', 'list')) : null;
-                $grid_view = !(($view == 'grid') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'grid' ? $view_base_params : array_add($view_base_params, 'view', 'grid')) : null;
-                $item_view = !(($view == 'item') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'item' ? $view_base_params : array_add($view_base_params, 'view', 'item')) : null;
+                $list_view = !(($view == 'list') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'list' ? $view_base_params : Arr::add($view_base_params, 'view', 'list')) : null;
+                $grid_view = !(($view == 'grid') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'grid' ? $view_base_params : Arr::add($view_base_params, 'view', 'grid')) : null;
+                $item_view = !(($view == 'item') && ($start == 0)) ? $route.$this->urlQueryString($view_default == 'item' ? $view_base_params : Arr::add($view_base_params, 'view', 'item')) : null;
                 break;
             }
         };

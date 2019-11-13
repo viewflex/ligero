@@ -12,6 +12,9 @@ class LigeroUnitTest extends TestCase
     use HasPublisher;
     use DatabaseTransactions;
 
+    /**
+     * @return void
+     */
     protected function setUp()
     {
         parent::setUp();
